@@ -54,10 +54,9 @@ export const useConversationsStore = create<ConversationsState>()(
           const res = await apiV2.post("/conversation/create");
 
           const newConversation: SafeConversation = res.data;
-          console.log(res.data);
           
           set({
-            conversations: [...get().conversations, newConversation],
+            conversations: [newConversation, ...get().conversations],
           });
           return newConversation.id;
         } catch (error) {
