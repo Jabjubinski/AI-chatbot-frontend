@@ -39,7 +39,7 @@ export default function SearchConversationsPage() {
                     focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
-      <div className="max-h-64 overflow-y-auto space-y-2 w-full min-w-full">
+      <div className="h-full overflow-y-auto space-y-2 w-full min-w-full">
         {conversations.length > 0 ? (
           conversations.map((conv: any) => (
             <Link
