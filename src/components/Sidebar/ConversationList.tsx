@@ -28,7 +28,6 @@ export default function ConversationList() {
       console.error("⚠️ WebSocket error:", err);
     };
 
-    // ✅ Cleanup on unmount
     return () => {
       ws.close();
     };
