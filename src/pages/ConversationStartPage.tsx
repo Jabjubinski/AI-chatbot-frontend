@@ -42,8 +42,8 @@ function ConversationCreate() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="h-20 flex gap-5 lg:w-180 sm:w-120 mb-3 mt-10">
-              <input className="w-full h-full bg-red-600" placeholder="Text" {...register("content", { required: true })}/>
-              <button type="submit">Send</button>
+              <input disabled={loading} className="w-full h-full bg-red-600" placeholder="Text" {...register("content", { required: true })}/>
+              <button disabled={loading} type="submit">Send</button>
           </form>
         </div>
       </div>
