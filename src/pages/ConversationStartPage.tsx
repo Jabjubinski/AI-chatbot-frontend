@@ -27,7 +27,6 @@ function ConversationCreate() {
         assistants: []
       }).then((data) => {
         navigate(`/c/${data}`)
-        
       }).finally(() => {
         reset();
       });

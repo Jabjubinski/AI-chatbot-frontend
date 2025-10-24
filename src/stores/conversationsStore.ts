@@ -8,7 +8,7 @@ interface ConversationsState {
   loading: boolean;
 
   fetch: ({ limit, search }: { limit?: number, search?: string }) => Promise<SafeConversation[] | []>;
-  create: ({ content, assistants }: { content: string, assistants: []}) => Promise<number | null>;
+  create: ({ content, assistants }: { content: string, assistants: [] }) => Promise<number | null>;
   deleteConversation: (id: number) => void;
   update: (data: SafeConversation) => Promise<void>
 }
@@ -63,10 +63,10 @@ export const useConversationsStore = create<ConversationsState>()(
         }
       },
 
-      create: async () => {
+      create: async ({ content, assistants }) => {
         try {
           set({ loading: true });
-          const res = await apiV2.post("/conversation/create");
+          const res = await apiV2.post("/conversation/create", { content, assistants });
 
           const newConversation: SafeConversation = res.data;
           
