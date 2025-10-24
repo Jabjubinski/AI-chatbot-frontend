@@ -14,9 +14,11 @@ export default function Chat() {
   const { user } = useAuthStore();
 
   const [selectedAssistants, setSelectedAssistants] = useState<number[]>([]);
+  
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { content: "" },
   });
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -1,44 +1,53 @@
+import { useForm } from "react-hook-form";
+import CustomInput from "../components/Conversation/CustomInput";
 import DeleteWarningModal from "../components/modals/DeleteWarningModal";
 import { useDeleteModal } from "../hooks/useDeleteModal";
+import { useAuthStore } from "../stores/authStore";
 import { useConversationsStore } from "../stores/conversationsStore";
 import { useNavigate } from "react-router-dom";
 
 // interface Props {}
 
 function ConversationCreate() {
-  const { create } = useConversationsStore();
-  const navigate = useNavigate();
-  const { isOpen } = useDeleteModal();
+  const { create, loading } = useConversationsStore();
 
-  const handleStartConversation = async () => {
-    const success = await create();
-    if (!success) return alert("Something went wrong");
-    navigate(`/c/${success}`);
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      content: ""
+    }
+  })
+
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+
+  const onSubmit = async ({ content }: { content: string }) => {
+    if (content.trim()) {
+      create({
+        content: content,
+        assistants: []
+      }).then((data) => {
+        navigate(`/c/${data}`)
+        
+      }).finally(() => {
+        reset();
+      });
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-between p-6 w-full h-full line-clamp-1">
-      {/* Center Content */}
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <h1 className="text-5xl font-bold text-gray-100 mb-4">
-            Start a New Conversation
-          </h1>
-          <p className="text-lg text-slate-500/60">
-            Begin your conversation journey. Connect, share, and engage in
-            meaningful dialogue.
-          </p>
+    <div className="h-dvh w-full flex flex-col items-center gap-2">
+      <div className="flex flex-1 overflow-y-auto w-full justify-center">
+        <div className="px-5 flex flex-col gap-5 lg:w-180 sm:w-120 py-5 text-gray-100">
+          <div className="text-5xl text-center h-full text-slate-500/60 flex justify-center items-center">
+              <span>Ask me anything, {user?.firstname}...</span>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="h-20 flex gap-5 lg:w-180 sm:w-120 mb-3 mt-10">
+              <input className="w-full h-full bg-red-600" placeholder="Text" {...register("content", { required: true })}/>
+              <button type="submit">Send</button>
+          </form>
         </div>
       </div>
-
-      {/* Bottom Button */}
-      <button
-        onClick={handleStartConversation}
-        className="w-full max-w-md cursor-pointer bg-[#33363D] hover:scale-103 hover:bg-[#3d4149] text-indigo-50 font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-lg"
-      >
-        Start Conversation
-      </button>
-      {isOpen && <DeleteWarningModal />}
     </div>
   );
 }

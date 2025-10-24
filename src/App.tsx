@@ -7,11 +7,10 @@ import ConversationDetails from "./components/Conversation/ConversationDetails";
 import ConversationStartPage from "./pages/ConversationStartPage";
 import { useDeleteModal } from "./hooks/useDeleteModal";
 import DeleteWarningModal from "./components/modals/DeleteWarningModal";
-import { useSearchModal } from "./hooks/useSearchModal";
-import SearchModal from "./components/modals/SearchModal";
+import SearchConversationsPage from "./pages/SearchConversationsPage";
+
 function App() {
   const { isOpen } = useDeleteModal();
-  const { isOpen: searchIsOpen } = useSearchModal();
 
   return (
     <>
@@ -25,12 +24,12 @@ function App() {
         >
           <Route path="/" element={<ConversationStartPage />} />
           <Route path="/c/:id" element={<ConversationDetails />} />
+          <Route path="/c/search" element={<SearchConversationsPage/>}/>
         </Route>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
       <div className="">{isOpen && <DeleteWarningModal />}</div>
-      <div>{searchIsOpen && <SearchModal />}</div>
     </>
   );
 }

@@ -17,7 +17,6 @@ import { useAuthStore } from "../../stores/authStore";
 import clsx from "clsx";
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSearchModal } from "../../hooks/useSearchModal";
 
 export default function Sidebar() {
   const { isOpen, toggleOpen } = useSidebar();
@@ -25,8 +24,6 @@ export default function Sidebar() {
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
   const modalRef = useRef<HTMLDivElement | null>(null);
-
-  const { onOpen } = useSearchModal();
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {

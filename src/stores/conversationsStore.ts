@@ -7,8 +7,8 @@ interface ConversationsState {
   conversations: SafeConversation[] | [];
   loading: boolean;
 
-  fetch: () => Promise<void>;
-  create: () => Promise<number | null>;
+  fetch: ({ limit, search }: { limit?: number, search?: string }) => Promise<SafeConversation[] | []>;
+  create: ({ content, assistants }: { content: string, assistants: []}) => Promise<number | null>;
   deleteConversation: (id: number) => void;
   update: (data: SafeConversation) => Promise<void>
 }
@@ -27,22 +27,37 @@ export const useConversationsStore = create<ConversationsState>()(
         }));
       },
 
+      deleteConversation: async (id: number) => {
+        try {
+          const res = await apiV2.delete(`/conversation/delete/${id}`);
 
-      deleteConversation: (id) => {
-         set((state) => ({
-          conversations: state.conversations.filter(
-            (conversation) => conversation.id !== id
-          ),
-        }));
+          const deletedId = res.data.id;
+
+          set((state) => ({
+            conversations: state.conversations.filter(
+              (conversation) => conversation.id !== deletedId
+            ),
+          }));
+        } catch (error) {
+          console.error("Failed to delete conversation:", error);
+        }
       },
 
-      fetch: async () => {
+      fetch: async ({ limit, search }) => {
         try {
-          set({ loading: true, conversations: [] });
-          const res = await apiV2.get("/conversation/list");
-          set({ conversations: res.data });
+          set({ loading: true });
+
+          const params = new URLSearchParams();
+          if (limit) params.append("limit", limit.toString());
+          if (search && search.trim()) params.append("search", search.trim());
+
+          const res = await apiV2.get(`/conversation/list?${params.toString()}`);
+
+          !search && set({ conversations: res.data });
+          return res.data
         } catch (error) {
-          console.log(error);
+          console.error("Failed to fetch conversations:", error);
+          return []
         } finally {
           set({ loading: false });
         }

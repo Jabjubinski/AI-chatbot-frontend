@@ -4,8 +4,11 @@ import Conversation from "./Conversation";
 
 export default function ConversationList() {
   const { conversations, fetch, update } = useConversationsStore();
+
   useEffect(() => {
-    fetch();
+    fetch({
+      limit: 10
+    });
   }, []);
 
   useEffect(() => {
@@ -38,13 +41,11 @@ export default function ConversationList() {
       <span className="px-2">Recent</span>
       <div className="space-y-0.5">
         {conversations.map((conversation: any) => (
-          <>
             <Conversation
               key={conversation.id}
               id={conversation.id}
               conversation={conversation}
             />
-          </>
         ))}
       </div>
     </div>
