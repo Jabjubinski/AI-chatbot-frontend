@@ -27,7 +27,7 @@ export const useConversationsStore = create<ConversationsState>()(
         }));
       },
 
-      
+
       deleteConversation: (id) => {
          set((state) => ({
           conversations: state.conversations.filter(
@@ -53,10 +53,12 @@ export const useConversationsStore = create<ConversationsState>()(
           set({ loading: true });
           const res = await apiV2.post("/conversation/create");
 
+          const newConversation: SafeConversation = res.data;
+
           set({
-            conversations: [...get().conversations, res.data],
+            conversations: [...get().conversations, newConversation],
           });
-          return res.data.id;
+          return newConversation.id;
         } catch (error) {
           console.error(error);
           return null;
