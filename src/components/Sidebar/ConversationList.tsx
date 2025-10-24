@@ -46,7 +46,7 @@ export default function ConversationList() {
               conversation={conversation}
             />
           </>
-        )).reverse()}
+        ))}
       </div>
     </div>
   );
