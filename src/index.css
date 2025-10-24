@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+
+@theme {
+  /* Primary Colors */
+  --color-primary: #030712; /* gray-950 */
+  --color-primary-dark: #111827; /* gray-900 */
+  --color-primary-light: #1f2937; /* gray-800 */
+
+  /* Secondary Colors */
+  --color-secondary: #374151; /* gray-700 */
+  --color-secondary-dark: #030712; /* gray-950 */
+  --color-secondary-light: #4b5563; /* gray-600 */
+
+  /* Accent Colors */
+  --color-accent-primary: #6b7280; /* gray-500 */
+  --color-accent-secondary: #9ca3af; /* gray-400 */
+  --color-accent-tertiary: #f3f4f6; /* gray-100 */
+  --color-accent-subtle: rgba(255, 255, 255, 0.02); /* Semi-transparent white */
+
+  /* Neutral Colors - Grayscale Spectrum */
+  --color-neutral-100: #f3f4f6; /* gray-100 */
+  --color-neutral-200: #e5e7eb; /* gray-200 equivalent */
+  --color-neutral-300: #d1d5db; /* gray-300 equivalent */
+  --color-neutral-400: #9ca3af; /* gray-400 */
+  --color-neutral-500: #6b7280; /* gray-500 */
+  --color-neutral-600: #4b5563; /* gray-600 */
+  --color-neutral-700: #374151; /* gray-700 */
+  --color-neutral-800: #1f2937; /* gray-800 */
+  --color-neutral-900: #111827; /* gray-900 */
+  --color-neutral-950: #030712; /* gray-950 */
+
+  /* Functional Colors */
+  --color-background: #ffffff; /* white */
+  --color-surface: #f3f4f6; /* gray-100 */
+  --color-text: #000000; /* black */
+  --color-text-secondary: #4b5563; /* gray-600 */
+
+  /* Semantic Colors - Grayscale variants */
+  --color-success: #374151; /* gray-700 */
+  --color-warning: #6b7280; /* gray-500 */
+  --color-error: #111827; /* gray-900 */
+  --color-info: #9ca3af; /* gray-400 */
+
+  /* Additional Utility Colors */
+  --color-overlay: rgba(255, 255, 255, 0.02); /* Subtle overlay */
+  --color-border: #e5e7eb; /* gray-200 equivalent */
+  --color-divider: #d1d5db; /* gray-300 equivalent */
+}
+
+::-webkit-scrollbar {
+  width: 0.5em;
+}
+::-webkit-scrollbar-track {
+  border-radius: 0.5em;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-700);
+  border-radius: 0.5em;
+  box-shadow: 0 0 1px grey;
+}
