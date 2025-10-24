@@ -22,7 +22,7 @@ function ConversationCreate() {
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center max-w-md">
           <h1 className="text-5xl font-bold text-gray-100 mb-4">
-            Start a New Conversation
+            Start a New Conversation 2
           </h1>
           <p className="text-lg text-slate-500/60">
             Begin your conversation journey. Connect, share, and engage in
