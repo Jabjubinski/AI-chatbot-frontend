@@ -12,7 +12,7 @@ interface AssistantState {
 
 export const useAssistantStore = create<AssistantState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       assistants: [],
       loading: false,
 

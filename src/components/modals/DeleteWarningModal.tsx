@@ -1,6 +1,5 @@
 import { Trash } from "lucide-react";
 import { useDeleteModal } from "../../hooks/useDeleteModal";
-import { useMessageStore } from "../../stores/messageStore";
 import { useConversationsStore } from "../../stores/conversationsStore";
 
 export default function DeleteWarningModal() {
