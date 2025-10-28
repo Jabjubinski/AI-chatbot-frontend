@@ -4,13 +4,25 @@ import { persist } from "zustand/middleware";
 import { apiV2 } from "../utils/axios";
 
 interface ConversationsState {
-  conversations: SafeConversation[] | [];
+  conversations: SafeConversation[];
   loading: boolean;
 
-  fetch: ({ limit, search }: { limit?: number, search?: string }) => Promise<SafeConversation[] | []>;
-  create: ({ content, assistants }: { content: string, assistants: [] }) => Promise<number | null>;
+  fetch: ({
+    limit,
+    search,
+  }: {
+    limit?: number;
+    search?: string;
+  }) => Promise<SafeConversation[]>;
+  create: ({
+    content,
+    assistants,
+  }: {
+    content: string;
+    assistants: number[];
+  }) => Promise<number | string | null>;
   deleteConversation: (id: number) => void;
-  update: (data: SafeConversation) => Promise<void>
+  update: (data: SafeConversation) => Promise<void>;
 }
 
 export const useConversationsStore = create<ConversationsState>()(
@@ -30,7 +42,6 @@ export const useConversationsStore = create<ConversationsState>()(
       deleteConversation: async (id: number) => {
         try {
           const res = await apiV2.delete(`/conversation/delete/${id}`);
-
           const deletedId = res.data.id;
 
           set((state) => ({
@@ -49,33 +60,39 @@ export const useConversationsStore = create<ConversationsState>()(
 
           const params = new URLSearchParams();
           if (limit) params.append("limit", limit.toString());
-          if (search && search.trim()) params.append("search", search.trim());
+          if (search?.trim()) params.append("search", search.trim());
 
-          const res = await apiV2.get(`/conversation/list?${params.toString()}`);
+          const res = await apiV2.get(
+            `/conversation/list?${params.toString()}`
+          );
 
-          !search && set({ conversations: res.data });
-          return res.data
+          if (!search) set({ conversations: res.data });
+          return res.data;
         } catch (error) {
           console.error("Failed to fetch conversations:", error);
-          return []
+          return [];
         } finally {
           set({ loading: false });
         }
       },
 
-      create: async ({ content, assistants }) => {
+      create: async ({ content, assistants }: { content: string; assistants: number[] }) => {
         try {
           set({ loading: true });
-          const res = await apiV2.post("/conversation/create", { content, assistants });
+          const res = await apiV2.post("/conversation/create", {
+            content,
+            assistants,
+          });
 
           const newConversation: SafeConversation = res.data;
-          
+
           set({
             conversations: [newConversation, ...get().conversations],
           });
+
           return newConversation.id;
         } catch (error) {
-          console.error(error);
+          console.error("Failed to create conversation:", error);
           return null;
         } finally {
           set({ loading: false });

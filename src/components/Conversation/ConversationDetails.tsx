@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import CustomInput from "./CustomInput";
 import { useParams } from "react-router-dom";
 import { useMessageStore } from "../../stores/messageStore";
@@ -6,15 +6,16 @@ import { useAssistantStore } from "../../stores/assistantStore";
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "../../stores/authStore";
 import Message from "../messages/Message";
+import { useSelectedAssistants } from "../../hooks/useSelectedAssistants";
 
 export default function Chat() {
   const { id } = useParams();
   const { fetchMessages, messages, loading, createMessage } = useMessageStore();
   const { assistants, fetchAssistants } = useAssistantStore();
   const { user } = useAuthStore();
+  const { selectedAssistants, toggleAssistant, clearAllAssistants } =
+    useSelectedAssistants();
 
-  const [selectedAssistants, setSelectedAssistants] = useState<number[]>([]);
-  
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { content: "" },
   });
@@ -30,37 +31,8 @@ export default function Chat() {
   }, [fetchAssistants]);
 
   useEffect(() => {
-    const local = localStorage.getItem("selectedAssistants");
-    if (local) {
-      const ids = JSON.parse(local);
-
-      if (Array.isArray(ids)) setSelectedAssistants(ids);
-    }
-  }, []);
-
-  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  const handleAssistantToggle = (assistantId: number) => {
-    const stored = localStorage.getItem("selectedAssistants");
-    let current = stored ? JSON.parse(stored) : [];
-
-    if (current.includes(assistantId)) {
-      current = current.filter((id: number) => id !== assistantId);
-    } else {
-      current.push(assistantId);
-    }
-
-    localStorage.setItem("selectedAssistants", JSON.stringify(current));
-
-    setSelectedAssistants(current);
-  };
-
-  const clearAllAssistants = () => {
-    setSelectedAssistants([]);
-    localStorage.removeItem("selectedAssistants");
-  };
 
   const onSubmit = ({ content }: { content: string }) => {
     if (id && content.trim()) {
@@ -101,7 +73,7 @@ export default function Chat() {
           textColor="white"
           assistants={assistants}
           selectedAssistants={selectedAssistants}
-          onToggleAssistant={handleAssistantToggle}
+          onToggleAssistant={toggleAssistant}
           onClearAll={clearAllAssistants}
         />
       </div>

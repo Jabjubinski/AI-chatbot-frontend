@@ -1,14 +1,21 @@
 import { Trash } from "lucide-react";
 import { useDeleteModal } from "../../hooks/useDeleteModal";
 import { useConversationsStore } from "../../stores/conversationsStore";
+import { useNavigate } from "react-router-dom";
 
 export default function DeleteWarningModal() {
   const { deleteConversation } = useConversationsStore();
   const { onClose, id } = useDeleteModal();
+  const navigate: any = useNavigate();
 
   function handleDeleteConversation(id: any) {
     onClose();
     deleteConversation(id);
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
   }
 
   return (
