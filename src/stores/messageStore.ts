@@ -26,6 +26,7 @@ export const useMessageStore = create<MessageState>()(
           set({ loading: true, messages: [] });
           const res = await apiV2.get(`/message/${conversationId}/list`);
           set({ messages: res.data });
+          console.log(res.data)
         } catch (error) {
           console.log(error);
         } finally {

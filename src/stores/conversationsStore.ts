@@ -66,6 +66,8 @@ export const useConversationsStore = create<ConversationsState>()(
             `/conversation/list?${params.toString()}`
           );
 
+          console.log(...res.data);
+
           if (!search) set({ conversations: res.data });
           return res.data;
         } catch (error) {
@@ -76,7 +78,13 @@ export const useConversationsStore = create<ConversationsState>()(
         }
       },
 
-      create: async ({ content, assistants }: { content: string; assistants: number[] }) => {
+      create: async ({
+        content,
+        assistants,
+      }: {
+        content: string;
+        assistants: number[];
+      }) => {
         try {
           set({ loading: true });
           const res = await apiV2.post("/conversation/create", {

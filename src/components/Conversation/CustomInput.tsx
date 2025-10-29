@@ -1,13 +1,13 @@
 import clsx from "clsx";
 import { ArrowUp, Plus, X } from "lucide-react";
-import type { FieldValues, UseFormRegister } from "react-hook-form";
+import type { UseFormRegister } from "react-hook-form";
 
 interface Assistant {
   id: number;
   name: string;
 }
 
-interface CustomInputProps<T extends FieldValues> {
+interface CustomInputProps {
   className?: string;
   textColor: string;
   register: UseFormRegister<any>;
@@ -19,7 +19,7 @@ interface CustomInputProps<T extends FieldValues> {
   onClearAll: () => void;
 }
 
-export default function CustomInput<T extends FieldValues>({
+export default function CustomInput({
   className,
   textColor,
   register,
@@ -29,7 +29,7 @@ export default function CustomInput<T extends FieldValues>({
   selectedAssistants,
   onToggleAssistant,
   // onClearAll,
-}: CustomInputProps<T>) {
+}: CustomInputProps) {
   const selectedAssistantObjects = assistants.filter((a) =>
     selectedAssistants.includes(a.id)
   );

@@ -6,15 +6,20 @@ import { useNavigate } from "react-router-dom";
 import { useAssistantStore } from "../stores/assistantStore";
 import { useEffect } from "react";
 import ConversationCreateSkeleton from "../skeletons/ConversationCreateSkeleton";
-import { useSelectedAssistants } from "../hooks/useSelectedAssistants";
 
 function ConversationCreate() {
   const { create, loading } = useConversationsStore();
-  const { assistants, fetchAssistants } = useAssistantStore();
+  const {
+    assistants,
+    fetchAssistants,
+    getSelectedAssistants,
+    toggleAssistant,
+    clearSelectedAssistants,
+  } = useAssistantStore();
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
-  const { selectedAssistants, toggleAssistant } = useSelectedAssistants();
+  const selectedAssistants = getSelectedAssistants("new");
 
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { content: "" },
@@ -30,7 +35,16 @@ function ConversationCreate() {
         content,
         assistants: selectedAssistants,
       }).then((data) => {
-        navigate(`/c/${data}`);
+        const newChatId = String(data);
+        useAssistantStore.setState((state) => ({
+          selectedAssistantsByChat: {
+            ...state.selectedAssistantsByChat,
+            [newChatId]: state.selectedAssistantsByChat["new"] || [],
+          },
+        }));
+
+        clearSelectedAssistants("new");
+        navigate(`/c/${newChatId}`);
         reset();
       });
     }
@@ -61,7 +75,7 @@ function ConversationCreate() {
                     return (
                       <button
                         key={assistant.id}
-                        onClick={() => toggleAssistant(assistant.id)}
+                        onClick={() => toggleAssistant("new", assistant.id)}
                       >
                         <div
                           className={clsx(
@@ -86,7 +100,7 @@ function ConversationCreate() {
                 disabled={selectedAssistants.length < 1 || loading}
                 autoComplete="off"
                 className={clsx(
-                  "border-none px-5 w-[90%] rounded-l-full outline-none transition-colors duration-300",
+                  "border-none px-5 w-[90%] outline-none rounded-l-full transition-colors duration-300",
                   "bg-[#1e2939] text-gray-400",
                   "disabled:cursor-not-allowed"
                 )}
@@ -102,7 +116,7 @@ function ConversationCreate() {
 
               <button
                 className={clsx(
-                  "border-none w-[10%] cursor-pointer pr-[3.25rem] rounded-r-full transition-all duration-300",
+                  "border-none w-[10%] cursor-pointer pr-[1rem] rounded-r-full transition-all duration-300",
                   selectedAssistants.length < 1 || loading
                     ? "text-gray-600 bg-[#1e2939]"
                     : "bg-[#1e2939]",

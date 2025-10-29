@@ -24,7 +24,7 @@ function App() {
         >
           <Route path="/" element={<ConversationStartPage />} />
           <Route path="/c/:id" element={<ConversationDetails />} />
-          <Route path="/c/search" element={<SearchConversationsPage/>}/>
+          <Route path="/c/search" element={<SearchConversationsPage />} />
         </Route>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
