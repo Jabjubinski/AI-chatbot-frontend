@@ -4,10 +4,12 @@ import { useAuthStore } from "../stores/authStore";
 import { useConversationsStore } from "../stores/conversationsStore";
 import { useNavigate } from "react-router-dom";
 import { useAssistantStore } from "../stores/assistantStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ConversationCreateSkeleton from "../skeletons/ConversationCreateSkeleton";
 
 function ConversationCreate() {
+  const [showSkeleton, setShowSkeleton] = useState(false);
+
   const { create, loading } = useConversationsStore();
   const {
     assistants,
@@ -50,7 +52,22 @@ function ConversationCreate() {
     }
   };
 
-  if (loading) return <ConversationCreateSkeleton />;
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    if (loading) {
+      timer = setTimeout(() => setShowSkeleton(true), 1000);
+    } else {
+      setShowSkeleton(false);
+      if (timer) clearTimeout(timer);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [loading]);
+
+  if (showSkeleton) return <ConversationCreateSkeleton />;
 
   return (
     <div className="h-dvh w-full flex flex-col items-center gap-2">
@@ -58,9 +75,7 @@ function ConversationCreate() {
         <div className="px-5 flex flex-col gap-5 lg:w-180 sm:w-120 text-gray-100">
           <div className="text-3xl text-center text-gray-300 font-medium flex justify-center items-center">
             <span>
-              {loading
-                ? "Thinking..."
-                : `Please select at least one Assistant, ${user?.firstname}`}
+              {`Please select at least one Assistant, ${user?.firstname}`}
             </span>
           </div>
 

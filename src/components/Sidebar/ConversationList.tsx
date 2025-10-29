@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import { useConversationsStore } from "../../stores/conversationsStore";
 import Conversation from "./Conversation";
+import useSidebar from "../../hooks/useSidebar";
 
 export default function ConversationList() {
   const { conversations, fetch, update } = useConversationsStore();
 
+  const { isOpen } = useSidebar();
+
   useEffect(() => {
     fetch({
-      limit: 10
+      limit: 10,
     });
   }, []);
 
@@ -37,17 +40,19 @@ export default function ConversationList() {
   }, []);
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      <span className="px-2">Recent</span>
-      <div className="space-y-0.5">
-        {conversations.map((conversation: any) => (
+    <div className="flex-1 mt-3 overflow-y-auto">
+      <span className="px-2 ">Recent</span>
+      {isOpen && (
+        <div className="space-y-0.5">
+          {conversations.map((conversation: any) => (
             <Conversation
               key={conversation.id}
               id={conversation.id}
               conversation={conversation}
             />
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

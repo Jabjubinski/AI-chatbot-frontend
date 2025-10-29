@@ -3,7 +3,6 @@ import type { SafeConversation } from "../../types";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { useDeleteModal } from "../../hooks/useDeleteModal";
-import { useConversationsStore } from "../../stores/conversationsStore";
 
 interface ConversationProps {
   conversation: SafeConversation;
@@ -13,12 +12,6 @@ interface ConversationProps {
 
 export default function Conversation({ conversation }: ConversationProps) {
   const { onOpen } = useDeleteModal();
-
-  const { deleteConversation } = useConversationsStore();
-
-  const handleDeleteConversation = ({ convo_id }: any) => {
-    onOpen(convo_id);
-  };
 
   return (
     <>
