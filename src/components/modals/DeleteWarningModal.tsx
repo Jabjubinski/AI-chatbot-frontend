@@ -11,7 +11,7 @@ export default function DeleteWarningModal() {
   function handleDeleteConversation(id: any) {
     onClose();
     deleteConversation(id);
-    if (window.history.length > 1) {
+    if (window.history.length > 2) {
       navigate(-1);
     } else {
       navigate("/");

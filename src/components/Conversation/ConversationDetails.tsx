@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAssistantStore } from "../../stores/assistantStore";
 import { useAuthStore } from "../../stores/authStore";
 import { useMessageStore } from "../../stores/messageStore";
@@ -59,6 +59,8 @@ export default function ConversationDetails() {
           ))
         )}
       </div>
+
+       
 
       <div className="h-20 lg:w-180 sm:w-120 mb-3 mt-10">
         <CustomInput
