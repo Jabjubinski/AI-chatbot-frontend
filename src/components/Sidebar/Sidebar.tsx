@@ -14,17 +14,17 @@ export default function Sidebar() {
       <button
         onClick={() => toggleOpen()}
         className={clsx(
-          "sm:hidden absolute px-4 py-4 z-50",
+          "sm:hidden absolute px-4 py-4 z-50 text-slate-300 hover:text-slate-100 transition-colors",
           isOpen && "hidden"
         )}
       >
-        <MenuIcon />
+        <MenuIcon className="w-6 h-6" />
       </button>
 
-
+      {/* Mobile overlay */}
       <div
         className={clsx(
-          "transition-opacity duration-300 sm:hidden",
+          "fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 sm:hidden z-40",
           isOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -32,51 +32,72 @@ export default function Sidebar() {
         onClick={toggleOpen}
       />
 
-      {/* Sidebar itself */}
+      {/* Sidebar */}
       <div
         className={clsx(
-          "bg-[#121212] h-full border-r border-neutral-800 flex flex-col justify-between",
-          "transition-[transform,opacity,width] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]",
+          "h-full flex flex-col justify-between",
+          "bg-slate-950 border-r border-slate-800/60",
+          "transition-all duration-500 ease-out",
           isOpen
-            ? "translate-x-0 opacity-100 w-[15rem]"
-            : "-translate-x-full opacity-0 sm:opacity-100 sm:translate-x-0 sm:w-[4rem]"
+            ? "sm:w-64 w-64 translate-x-0 opacity-100 shadow-xl shadow-black/50"
+            : "sm:w-20 w-64 -translate-x-full opacity-0 sm:translate-x-0 sm:opacity-100 sm:shadow-lg sm:shadow-black/30"
         )}
       >
-        <div>
-          <div className="p-3 flex items-center justify-between border-b border-neutral-800">
+        {/* Header */}
+        <div className="space-y-0">
+          <div className="px-4 py-4 flex items-center justify-between border-b border-slate-800/40">
             <button
               onClick={() => toggleOpen()}
-              className="p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+              className="p-2 hover:bg-slate-800/50 rounded-lg transition-all duration-200 hover:shadow-md"
             >
               {isOpen ? (
-                <SidebarClose className="w-5 h-5 text-neutral-400" />
+                <SidebarClose className="w-5 h-5 text-slate-400 hover:text-slate-200 transition-colors" />
               ) : (
-                <SidebarOpen className="w-5 h-5 text-neutral-400" />
+                <SidebarOpen className="w-5 h-5 text-slate-400 hover:text-slate-200 transition-colors" />
               )}
             </button>
           </div>
 
-          <div className="p-2 border-b border-neutral-800">
+          {/* Menu Items */}
+          <div className="px-3 py-3 border-b border-slate-800/40">
             <MenuItems />
           </div>
         </div>
 
+        {/* Conversation List */}
         <div
           className={clsx(
-            "text-sm text-neutral-200 h-full whitespace-nowrap transition-all duration-500 ease-in-out",
-            isOpen
-              ? "opacity-100 translate-x-0 delay-50 ml-2"
-              : "opacity-0 -translate-x-2 ml-0"
+            "flex-1 overflow-hidden flex flex-col",
+            "transition-all duration-500"
           )}
-          style={{
-            transitionProperty: "opacity, transform, margin",
-          }}
         >
-          <ConversationList />
+          <div
+            className={clsx(
+              "flex-1 overflow-y-auto px-2 py-3 transition-all duration-500",
+              isOpen
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-4 pointer-events-none"
+            )}
+          >
+            <ConversationList />
+          </div>
         </div>
 
-        <div className="w-full flex justify-center border-t border-neutral-800">
-          <SidebarProfile />
+        {/* Profile Footer */}
+        <div
+          className={clsx(
+            "border-t border-slate-800/40 bg-slate-900/50 backdrop-blur-md",
+            "transition-all duration-500"
+          )}
+        >
+          <div
+            className={clsx(
+              "overflow-hidden transition-all duration-500",
+              isOpen ? "max-h-24 opacity-100" : "max-h-20 opacity-75"
+            )}
+          >
+            <SidebarProfile />
+          </div>
         </div>
       </div>
     </div>
