@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Settings, Sparkle, LogOut } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import CustomButton from "../UI/CustomButton";
 
 export default function SidebarProfile() {
   const { user, isAuth, logout } = useAuthStore();
