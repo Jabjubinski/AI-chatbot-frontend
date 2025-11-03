@@ -6,10 +6,9 @@ import { apiV2 } from "../utils/axios";
 interface AssistantState {
   assistants: SafeAssistant[];
   loading: boolean;
-  selectedAssistantsByChat: Record<string, number[]>; 
+  selectedAssistantsByChat: Record<string, number[]>;
 
-  fetchAssistants: () => Promise<void>;
-  
+  fetchAssistants: (tags: number[]) => Promise<void>;
 
   getSelectedAssistants: (chatId: string) => number[];
   toggleAssistant: (chatId: string, assistantId: number) => void;
@@ -23,10 +22,15 @@ export const useAssistantStore = create<AssistantState>()(
       loading: false,
       selectedAssistantsByChat: {},
 
-      fetchAssistants: async () => {
+      fetchAssistants: async (tags) => {
         try {
           set({ loading: true, assistants: [] });
-          const res = await apiV2.get(`/assistant/list`);
+
+          const tagString = tags && tags.length > 0 ? tags.join(',') : '';
+          const res = await apiV2.get(`/assistant/list`, {
+            params: tagString ? { tags: tagString } : {},
+          });
+          
           set({ assistants: res.data });
           console.log(...res.data);
         } catch (error) {

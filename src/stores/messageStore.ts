@@ -11,7 +11,6 @@ interface MessageState {
   createMessage: (
     content: string,
     conversationId: string,
-    assistant_ids: number[]
   ) => Promise<void>;
 }
 
@@ -34,7 +33,7 @@ export const useMessageStore = create<MessageState>()(
         }
       },
 
-      createMessage: async (content, conversationId, assistant_ids) => {
+      createMessage: async (content, conversationId) => {
         try {
           const fakeData = {
             id: null,
@@ -46,7 +45,6 @@ export const useMessageStore = create<MessageState>()(
           set({ loading: true, messages: [...get().messages, fakeData] });
           const res = await apiV2.post(`/message/${conversationId}/create`, {
             content,
-            assistant_ids,
           });
           const { user_message, assistant_message } = res.data;
 

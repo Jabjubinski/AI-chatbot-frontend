@@ -14,10 +14,6 @@ interface CustomInputProps {
   register: UseFormRegister<any>;
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
   disabled: boolean;
-  assistants: Assistant[];
-  selectedAssistants: number[];
-  onToggleAssistant: (assistantId: number) => void;
-  onClearAll: () => void;
 }
 
 export default function CustomInput({
@@ -26,16 +22,7 @@ export default function CustomInput({
   register,
   handleSubmit,
   disabled,
-  assistants,
-  selectedAssistants,
-  onToggleAssistant,
 }: CustomInputProps) {
-  const selectedAssistantObjects = assistants.filter((a) =>
-    selectedAssistants.includes(a.id)
-  );
-  const availableAssistants = assistants.filter(
-    (a) => !selectedAssistants.includes(a.id)
-  );
 
   const [isShowing, setIsShowing] = useState<boolean>(false);
 
@@ -47,51 +34,6 @@ export default function CustomInput({
         className
       )}
     >
-      <Activity mode={isShowing ? "visible" : "hidden"}>
-        {selectedAssistants.length > 0 && (
-          <div className="absolute bottom-full bg-[#364A3D]/90 p-2 rounded-2xl mb-3 w-full px-3 overflow-x-auto backdrop-blur-sm border border-[#4F6C5B]/30">
-            <div className="flex flex-wrap gap-2">
-              {selectedAssistantObjects.map((assistant) => (
-                <div
-                  key={assistant.id}
-                  className="group bg-gradient-to-r from-[#6BC8B0] to-[#A8E6A3] text-[#1E1E1E] px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 shadow-md shadow-[#6BC8B0]/30 animate-in fade-in slide-in-from-bottom-2 duration-400"
-                >
-                  <span>{assistant.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => onToggleAssistant(assistant.id)}
-                    className="hover:bg-black/10 rounded-full p-1 transition-colors"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        <div
-          className="absolute bottom-full mb-3 w-full px-4"
-          style={{
-            marginBottom: selectedAssistants.length > 0 ? "110px" : "12px",
-          }}
-        >
-          {availableAssistants.length > 0 && (
-            <div className="flex flex-wrap gap-2 bg-[#364A3D]/90 p-2 px-4 rounded-2xl backdrop-blur-sm border border-[#4F6C5B]/30">
-              {availableAssistants.map((assistant) => (
-                <button
-                  key={assistant.id}
-                  type="button"
-                  onClick={() => onToggleAssistant(assistant.id)}
-                  className="px-4 py-2 rounded-full text-sm font-medium transition-transform ease-in-out duration-200 bg-[#4C6353]/80 text-[#E6EAE8] hover:bg-[#557C56]/80 hover:scale-105 active:scale-95 border border-[#5B7E64]/40"
-                >
-                  {assistant.name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </Activity>
-
       <div className="flex justify-center h-full">
         <form
           onSubmit={handleSubmit}
@@ -116,13 +58,6 @@ export default function CustomInput({
             disabled={disabled}
             className="border-none w-[90%] bg-transparent h-full px-2 outline-none placeholder:text-[#C9D4CD]"
             style={{ color: textColor }}
-            placeholder={
-              selectedAssistants.length > 0
-                ? `Asking ${selectedAssistants.length} assistant${
-                    selectedAssistants.length > 1 ? "s" : ""
-                  }...`
-                : "Type your message..."
-            }
             autoComplete="off"
           />
           <button

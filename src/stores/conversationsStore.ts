@@ -89,7 +89,7 @@ export const useConversationsStore = create<ConversationsState>()(
           set({ loading: true });
           const res = await apiV2.post("/conversation/create", {
             content,
-            assistants,
+            assistant_ids: assistants,
           });
 
           const newConversation: SafeConversation = res.data;
