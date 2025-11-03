@@ -1,4 +1,4 @@
-import { useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import { useAuthStore } from "../../stores/authStore";
 import { useMessageStore } from "../../stores/messageStore";
 import { useParams } from "react-router-dom";
@@ -40,11 +40,6 @@ export default function ConversationDetails() {
 
   return (
     <div className="h-dvh w-full flex flex-col justify-end items-center gap-2">
-      <div className="w-full h-1/12 bg-gray-500 gap-2 flex items-center px-5">
-        {conversation?.assistants?.map((assistant) => (
-          <h2 key={assistant.id}>{assistant.name}</h2>
-        ))}
-      </div>
       <div className="h-4/5 flex flex-col lg:w-180 sm:w-120">
         {messages.length === 0 ? (
           <div className="text-5xl text-center h-full text-slate-500/60 flex justify-center items-center">

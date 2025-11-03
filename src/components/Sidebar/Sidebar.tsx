@@ -18,7 +18,6 @@ export default function Sidebar() {
           "sm:hidden absolute px-4 py-4 z-50 text-slate-300 hover:text-slate-100 transition-colors",
           isOpen && "hidden"
         )}
-        label="test"
       >
         <MenuIcon className="w-6 h-6" />
       </CustomButton>
