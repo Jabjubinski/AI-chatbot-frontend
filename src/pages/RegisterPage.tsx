@@ -4,8 +4,8 @@ import { useAuthStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
-  const { register: userRegister } = useAuthStore()
-  const navigate = useNavigate()
+  const { register: userRegister } = useAuthStore();
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm<SafeUserRegister>({
     defaultValues: {
       firstname: "",
@@ -17,11 +17,11 @@ export default function RegisterPage() {
     },
   });
 
-  const onSubmit = async (data:SafeUserRegister) => {
-    const status = await userRegister(data)
-    if(!status) return console.log("Something went wrong");
+  const onSubmit = async (data: SafeUserRegister) => {
+    const status = await userRegister(data);
+    if (!status) return console.log("Something went wrong");
     console.log("Success");
-    navigate('/login')
+    navigate("/login");
   };
 
   return (
@@ -48,7 +48,10 @@ export default function RegisterPage() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-5"
+            >
               {/* Name fields */}
               <div className="flex gap-4">
                 <div className="flex-1 group">
@@ -109,13 +112,13 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Submit button */}
-              <button
+              {/* Submit CustomButton */}
+              <CustomButton
                 type="submit"
                 className="w-full mt-3 h-12 rounded-xl bg-white text-black font-semibold hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-gray-950 active:scale-[0.99] shadow-lg shadow-white/5"
               >
                 Continue
-              </button>
+              </CustomButton>
 
               <p className="text-center text-gray-500 text-xs mt-2">
                 By continuing, you agree to our Terms of Service

@@ -3,6 +3,7 @@ import type { SafeConversation } from "../../types";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { useDeleteModal } from "../../hooks/useDeleteModal";
+import CustomButton from "../UI/CustomButton";
 
 interface ConversationProps {
   conversation: SafeConversation;
@@ -37,13 +38,13 @@ export default function Conversation({ conversation }: ConversationProps) {
           </Link>
 
           <div className="absolute hidden group-hover:flex right-2 top-1/2 -translate-y-1/2 items-center gap-1 bg-neutral-800 rounded-lg p-1">
-            <button
+            <CustomButton
               className="p-1.5 hover:bg-neutral-700 rounded transition-colors"
               aria-label="Delete chat"
               onClick={() => onOpen(conversation.id)}
             >
               <Trash2 className="w-3.5 h-3.5 text-neutral-400" />
-            </button>
+            </CustomButton>
           </div>
         </div>
       </div>

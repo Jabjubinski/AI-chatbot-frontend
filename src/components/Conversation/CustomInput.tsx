@@ -1,12 +1,8 @@
 import clsx from "clsx";
-import { ArrowUp, Plus, X } from "lucide-react";
-import { Activity, useState } from "react";
+import { ArrowUp, Plus } from "lucide-react";
+import { useState } from "react";
 import type { UseFormRegister } from "react-hook-form";
-
-interface Assistant {
-  id: number;
-  name: string;
-}
+import CustomButton from "../UI/CustomButton";
 
 interface CustomInputProps {
   className?: string;
@@ -23,7 +19,6 @@ export default function CustomInput({
   handleSubmit,
   disabled,
 }: CustomInputProps) {
-
   const [isShowing, setIsShowing] = useState<boolean>(false);
 
   return (
@@ -60,13 +55,13 @@ export default function CustomInput({
             style={{ color: textColor }}
             autoComplete="off"
           />
-          <button
+          <CustomButton
             type="submit"
             disabled={disabled}
             className="bg-[#A8E6A3] p-2.5 rounded-full cursor-pointer hover:bg-[#B6EBB4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowUp color="#1E1E1E" size={20} />
-          </button>
+          </CustomButton>
         </form>
       </div>
     </div>

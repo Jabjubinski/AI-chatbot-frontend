@@ -5,6 +5,7 @@ import { useAssistantStore } from "../stores/assistantStore";
 import clsx from "clsx";
 import type { SafeAssistant } from "../types";
 import { useConversationsStore } from "../stores/conversationsStore";
+import CustomButton from "../components/UI/CustomButton";
 
 function ConversationCreate() {
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
@@ -14,7 +15,7 @@ function ConversationCreate() {
   );
   const { assistant_tags, fetchAssistantTags } = useAssistantTagStore();
   const { assistants, fetchAssistants } = useAssistantStore();
-  const { create } = useConversationsStore()
+  const { create } = useConversationsStore();
   console.log(selectedTags);
   console.log(assistants);
 
@@ -29,12 +30,11 @@ function ConversationCreate() {
   const handleSubmit = () => {
     const assistantIds: number[] = selectedAssistants.map((a) => a.id);
 
-
     console.log(assistantIds);
     create({
       content: prompt,
-      assistants: assistantIds
-    })
+      assistants: assistantIds,
+    });
   };
 
   return (
@@ -77,7 +77,7 @@ function ConversationCreate() {
           {/* Category Tags */}
           <div className="px-8 py-4 border-b border-slate-800/60 bg-slate-900/20 backdrop-blur-sm">
             <div className="flex flex-wrap gap-2">
-              <button
+              <CustomButton
                 disabled={selectedTags.length === 0}
                 onClick={() => setSelectedTags([])}
                 className={clsx(
@@ -88,9 +88,9 @@ function ConversationCreate() {
                 )}
               >
                 All
-              </button>
+              </CustomButton>
               {assistant_tags.map((tag) => (
-                <button
+                <CustomButton
                   key={tag.id}
                   onClick={() =>
                     selectedTags.includes(tag.id)
@@ -107,7 +107,7 @@ function ConversationCreate() {
                   )}
                 >
                   {tag.name}
-                </button>
+                </CustomButton>
               ))}
             </div>
           </div>
@@ -118,7 +118,7 @@ function ConversationCreate() {
               {/* Selected Assistant Card */}
 
               {assistants.map((assistant) => (
-                <button
+                <CustomButton
                   onClick={() =>
                     selectedAssistants.some(
                       (_assistant) => _assistant.id === assistant.id
@@ -162,7 +162,7 @@ function ConversationCreate() {
                       {assistant.tag}
                     </span>
                   </div>
-                </button>
+                </CustomButton>
               ))}
             </div>
           </div>
@@ -188,7 +188,7 @@ function ConversationCreate() {
                   </p>
                   <p className="text-xs text-slate-500">Selected</p>
                 </div>
-                <button
+                <CustomButton
                   onClick={() =>
                     setSelectedAssistants((prev) =>
                       prev.filter((f) => f.id !== assistant.id)
@@ -197,7 +197,7 @@ function ConversationCreate() {
                   className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-slate-700/60 rounded-md"
                 >
                   <X className="w-4 h-4 text-slate-400 hover:text-slate-200" />
-                </button>
+                </CustomButton>
               </div>
             ))}
           </div>
@@ -213,15 +213,14 @@ function ConversationCreate() {
                 rows={4}
               />
 
-              <button
-                type="button"
+              <CustomButton
                 onClick={handleSubmit}
                 disabled={prompt.length <= 0}
                 className="w-full py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0"
               >
                 Start
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </CustomButton>
             </div>
           </div>
         </div>

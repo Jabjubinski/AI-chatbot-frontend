@@ -33,11 +33,12 @@ export default function SidebarProfile() {
   }, [isClicked]);
 
   return (
-    <div ref={modalRef} className={clsx("w-full px-1 py-2 relative",
-        isOpen && "pl-2"
-    )}>
+    <div
+      ref={modalRef}
+      className={clsx("w-full px-1 py-2 relative", isOpen && "pl-2")}
+    >
       <div className="flex items-center">
-        <button
+        <CustomButton
           onClick={() => setIsClicked(!isClicked)}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-800 transition-colors text-left"
         >
@@ -70,26 +71,26 @@ export default function SidebarProfile() {
               </>
             )}
           </div>
-        </button>
+        </CustomButton>
 
         {isOpen && (
           <div className="p-1">
             {isClicked && (
               <div className="absolute bottom-full mb-2 transition-opacity duration-300 border text-sm border-[#0A0A0A] rounded-xl bg-[#202020] flex flex-col min-w-full right-0 shadow-xl shadow-black/30">
-                <button className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
+                <CustomButton className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
                   <Sparkle className="w-5" />
                   <span>Upgrade plan</span>
-                </button>
-                <button className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
+                </CustomButton>
+                <CustomButton className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
                   <Settings className="w-5" /> <span>Settings</span>
-                </button>
+                </CustomButton>
                 <span className="border-b border-b-[#2A2A2A]" />
-                <button
+                <CustomButton
                   className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center"
                   onClick={logout}
                 >
                   <LogOut className="w-5" /> <span>Sign out</span>
-                </button>
+                </CustomButton>
               </div>
             )}
           </div>

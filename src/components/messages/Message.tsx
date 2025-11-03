@@ -3,6 +3,7 @@ import { Clipboard, ClipboardCheck } from "lucide-react";
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import CustomButton from "../UI/CustomButton";
 
 interface MessageProps {
   role: "user" | "assistant";
@@ -23,7 +24,7 @@ export default function Message({ role, content }: MessageProps) {
       if (start > lastIndex) {
         parts.push(<p key={`text-${i}`}>{content.slice(lastIndex, start)}</p>);
       }
-      
+
       const [copied, setCopied] = useState(false);
 
       const handleCopy = async () => {
@@ -41,8 +42,8 @@ export default function Message({ role, content }: MessageProps) {
           key={`code-${i}`}
           className="relative group my-2 rounded-lg overflow-hidden"
         >
-          {/* Copy button */}
-          <button
+          {/* Copy CustomButton */}
+          <CustomButton
             onClick={handleCopy}
             className={clsx(
               "absolute top-2 right-2 flex items-center gap-1 cursor-pointer text-xs px-2 py-1 rounded-md bg-gray-700/80 text-white opacity-0",
@@ -58,7 +59,7 @@ export default function Message({ role, content }: MessageProps) {
                 <Clipboard size={14} /> Copy
               </>
             )}
-          </button>
+          </CustomButton>
 
           {/* Syntax Highlighter */}
           <SyntaxHighlighter

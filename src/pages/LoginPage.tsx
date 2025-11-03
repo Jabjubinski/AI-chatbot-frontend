@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
+import CustomButton from "../components/UI/CustomButton";
 
 export default function LoginPage() {
   const { login } = useAuthStore();
@@ -98,8 +99,8 @@ export default function LoginPage() {
                 />
               </div>
 
-              {/* Submit button */}
-              <button
+              {/* Submit CustomButton */}
+              <CustomButton
                 type="submit"
                 disabled={isLoading}
                 className={clsx(
@@ -121,7 +122,7 @@ export default function LoginPage() {
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
-              </button>
+              </CustomButton>
 
               <p className="text-center text-slate-500 text-xs mt-2">
                 By continuing, you agree to our Terms of Service

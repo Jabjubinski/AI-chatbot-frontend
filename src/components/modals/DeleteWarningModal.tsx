@@ -36,18 +36,18 @@ export default function DeleteWarningModal() {
           </p>
 
           <div className="flex gap-3">
-            <button
+            <CustomButton
               onClick={onClose}
               className="flex-1 px-4 py-2 bg-gray-200 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors font-medium"
             >
               Cancel
-            </button>
-            <button
+            </CustomButton>
+            <CustomButton
               onClick={() => handleDeleteConversation(id)}
               className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
             >
               Delete
-            </button>
+            </CustomButton>
           </div>
         </div>
       </div>

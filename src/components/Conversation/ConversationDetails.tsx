@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { useAssistantStore } from "../../stores/assistantStore";
+import { useEffect, useRef} from "react";
 import { useAuthStore } from "../../stores/authStore";
 import { useMessageStore } from "../../stores/messageStore";
 import { useParams } from "react-router-dom";

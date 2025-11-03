@@ -4,6 +4,7 @@ import ConversationList from "./ConversationList";
 import useSidebar from "../../hooks/useSidebar";
 import clsx from "clsx";
 import SidebarProfile from "./SidebarProfile";
+import CustomButton from "../UI/CustomButton";
 
 export default function Sidebar() {
   const { isOpen, toggleOpen } = useSidebar();
@@ -11,15 +12,16 @@ export default function Sidebar() {
   return (
     <div className="h-full relative">
       {/* Sidebar toggle (mobile only) */}
-      <button
+      <CustomButton
         onClick={() => toggleOpen()}
         className={clsx(
           "sm:hidden absolute px-4 py-4 z-50 text-slate-300 hover:text-slate-100 transition-colors",
           isOpen && "hidden"
         )}
+        label="test"
       >
         <MenuIcon className="w-6 h-6" />
-      </button>
+      </CustomButton>
 
       {/* Mobile overlay */}
       <div
@@ -46,7 +48,7 @@ export default function Sidebar() {
         {/* Header */}
         <div className="space-y-0">
           <div className="px-4 py-4 flex items-center justify-between border-b border-slate-800/40">
-            <button
+            <CustomButton
               onClick={() => toggleOpen()}
               className="p-2 hover:bg-slate-800/50 rounded-lg transition-all duration-200 hover:shadow-md"
             >
@@ -55,7 +57,7 @@ export default function Sidebar() {
               ) : (
                 <SidebarOpen className="w-5 h-5 text-slate-400 hover:text-slate-200 transition-colors" />
               )}
-            </button>
+            </CustomButton>
           </div>
 
           {/* Menu Items */}
