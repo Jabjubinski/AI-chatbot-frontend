@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import type { SafeUserRegister } from "../types";
 import { useAuthStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
+import CustomButton from "../components/UI/CustomButton";
 
 export default function RegisterPage() {
   const { register: userRegister } = useAuthStore();

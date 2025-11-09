@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useAuthStore } from "../../stores/authStore";
 import { useMessageStore } from "../../stores/messageStore";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -7,11 +6,11 @@ import CustomInput from "./CustomInput";
 import Message from "../messages/Message";
 import { useConversationStore } from "../../stores/conversationStore";
 
+
 export default function ConversationDetails() {
   const { id } = useParams();
   const { fetchMessages, messages, loading, createMessage } = useMessageStore();
   const { conversation, fetch } = useConversationStore();
-  const { user } = useAuthStore();
 
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { content: "" },
@@ -39,25 +38,21 @@ export default function ConversationDetails() {
   };
 
   return (
-    <div className="h-dvh w-full flex flex-col justify-end items-center gap-2">
-      <div className="h-4/5 flex flex-col lg:w-180 sm:w-120">
-        {messages.length === 0 ? (
-          <div className="text-5xl text-center h-full text-slate-500/60 flex justify-center items-center">
-            <span>Ask me anything, {user?.firstname}...</span>
-          </div>
-        ) : (
-          messages.map((data) => (
+    <div className="flex flex-col flex-1 bg-[#121826] h-dvh">
+      <div className="flex flex-col h-full overflow-scroll mt-10">
+        {messages.map((data) => (
+          <div className="flex flex-col">
             <Message key={data.id} role={data.role} content={data.content} />
-          ))
-        )}
+          </div>
+        ))}
       </div>
-
-      <div className="h-20 lg:w-180 sm:w-120 mb-3 mt-10">
+      <div className="h-1/9 flex justify-center items-center">
         <CustomInput
           disabled={loading}
           register={register}
           handleSubmit={handleSubmit(onSubmit)}
           textColor="white"
+          className="w-1/2"
         />
       </div>
     </div>

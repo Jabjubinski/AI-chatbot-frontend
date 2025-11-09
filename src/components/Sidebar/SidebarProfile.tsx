@@ -34,12 +34,10 @@ export default function SidebarProfile() {
   }, [isClicked]);
 
   return (
-    <div
-      ref={modalRef}
-      className={clsx("w-full px-1 py-2 relative", isOpen && "pl-2")}
-    >
-      <div className="flex items-center">
+    <div ref={modalRef} className="w-full px-1 py-2 relative">
+      <div className="flex items-center w-full">
         <CustomButton
+          size="full"
           onClick={() => setIsClicked(!isClicked)}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-800 transition-colors text-left"
         >
@@ -47,11 +45,12 @@ export default function SidebarProfile() {
             <span className="text-xs font-semibold flex justify-center items-center w-full text-white">
               {user?.firstname.charAt(0)}
               {user?.lastname.charAt(0)}
+
             </span>
           </div>
           <div
             className={clsx(
-              "transition-opacity duration-300",
+              "transition-opacity duration-300 overflow-hidden w-full",
               isOpen
                 ? "opacity-100 delay-200 pointer-events-auto"
                 : "opacity-0 pointer-events-none"
@@ -60,7 +59,7 @@ export default function SidebarProfile() {
             {isOpen && (
               <>
                 {isAuth ? (
-                  <div className="text-sm text-neutral-200 truncate flex items-center">
+                  <div className="text-sm  text-neutral-200 truncate flex items-center">
                     {user?.firstname} {user?.lastname}
                   </div>
                 ) : (
@@ -74,26 +73,22 @@ export default function SidebarProfile() {
           </div>
         </CustomButton>
 
-        {isOpen && (
-          <div className="p-1">
-            {isClicked && (
-              <div className="absolute bottom-full mb-2 transition-opacity duration-300 border text-sm border-[#0A0A0A] rounded-xl bg-[#202020] flex flex-col min-w-full right-0 shadow-xl shadow-black/30">
-                <CustomButton className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
-                  <Sparkle className="w-5" />
-                  <span>Upgrade plan</span>
-                </CustomButton>
-                <CustomButton className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
-                  <Settings className="w-5" /> <span>Settings</span>
-                </CustomButton>
-                <span className="border-b border-b-[#2A2A2A]" />
-                <CustomButton
-                  className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center"
-                  onClick={logout}
-                >
-                  <LogOut className="w-5" /> <span>Sign out</span>
-                </CustomButton>
-              </div>
-            )}
+        {isOpen && isClicked && (
+          <div className="absolute bottom-full mb-2 transition-opacity duration-300 border text-sm border-[#0A0A0A] rounded-xl bg-[#202020] flex flex-col min-w-full right-0 shadow-xl shadow-black/30">
+            <CustomButton className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
+              <Sparkle className="w-5" />
+              <span>Upgrade plan</span>
+            </CustomButton>
+            <CustomButton className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
+              <Settings className="w-5" /> <span>Settings</span>
+            </CustomButton>
+            <span className="border-b border-b-[#2A2A2A]" />
+            <CustomButton
+              className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center"
+              onClick={logout}
+            >
+              <LogOut className="w-5" /> <span>Sign out</span>
+            </CustomButton>
           </div>
         )}
       </div>

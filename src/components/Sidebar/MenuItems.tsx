@@ -21,7 +21,7 @@ export default function MenuItems() {
           key={index}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-800 transition-colors text-left overflow-hidden"
         >
-          <item.icon className="w-5 h-5 text-neutral-400 flex-shrink-0" />
+          <item.icon className="w-5 h-5 text-white/75 flex-shrink-0" />
 
           <span
             className={clsx(

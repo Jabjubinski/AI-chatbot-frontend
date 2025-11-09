@@ -1,9 +1,9 @@
-import { FolderIcon, Trash2 } from "lucide-react";
 import type { SafeConversation } from "../../types";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { useDeleteModal } from "../../hooks/useDeleteModal";
 import CustomButton from "../UI/CustomButton";
+import icons from "../UI/icons";
 
 interface ConversationProps {
   conversation: SafeConversation;
@@ -24,7 +24,11 @@ export default function Conversation({ conversation }: ConversationProps) {
           
         `}
           >
-            <FolderIcon className="w-5 h-5 text-neutral-400" />
+            <img
+              src={icons.folder.src}
+              alt={icons.folder.alt}
+              className="w-5 h-5 opacity-75"
+            />
             <div className="flex-1 min-w-0">
               <div className="text-sm text-neutral-200 truncate">
                 {conversation.title}
@@ -39,11 +43,15 @@ export default function Conversation({ conversation }: ConversationProps) {
 
           <div className="absolute hidden group-hover:flex right-2 top-1/2 -translate-y-1/2 items-center gap-1 bg-neutral-800 rounded-lg p-1">
             <CustomButton
-              className="p-1.5 hover:bg-neutral-700 rounded transition-colors"
+              className="p-1.5 hover:bg-neutral-700  cursor-pointer rounded transition-colors"
               aria-label="Delete chat"
               onClick={() => onOpen(conversation.id)}
             >
-              <Trash2 className="w-3.5 h-3.5 text-neutral-400" />
+              <img
+                src={icons.trash.src}
+                alt={icons.trash.alt}
+                className="w-3.5 h-3.5 opacity-75"
+              />
             </CustomButton>
           </div>
         </div>

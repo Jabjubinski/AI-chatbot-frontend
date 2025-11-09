@@ -2,18 +2,19 @@ import { Trash } from "lucide-react";
 import { useDeleteModal } from "../../hooks/useDeleteModal";
 import { useConversationsStore } from "../../stores/conversationsStore";
 import { useNavigate } from "react-router-dom";
+import CustomButton from "../UI/CustomButton";
+import { useIsSamePage } from "../../hooks/useLocation";
 
 export default function DeleteWarningModal() {
   const { deleteConversation } = useConversationsStore();
   const { onClose, id } = useDeleteModal();
   const navigate: any = useNavigate();
+   const isSamePage = useIsSamePage();;
 
   function handleDeleteConversation(id: any) {
     onClose();
     deleteConversation(id);
-    if (window.history.length > 2) {
-      navigate(-1);
-    } else {
+    if (isSamePage()) {
       navigate("/");
     }
   }
@@ -35,7 +36,7 @@ export default function DeleteWarningModal() {
             cannot be undone.
           </p>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full justify-center">
             <CustomButton
               onClick={onClose}
               className="flex-1 px-4 py-2 bg-gray-200 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors font-medium"
