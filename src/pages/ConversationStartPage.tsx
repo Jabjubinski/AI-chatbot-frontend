@@ -115,7 +115,7 @@ function ConversationCreate() {
           </div>
 
           {loading ? ( 
-              <div className="flex w-full justify-center">
+            <div className="flex w-full py-20 justify-center">
               <LoadingCircleSpinner />
             </div>
           ) : (

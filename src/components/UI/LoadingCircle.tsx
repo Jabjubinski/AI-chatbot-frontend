@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import { motion } from "motion/react"
+import { motion } from "motion/react";
 
 function LoadingCircleSpinner() {
-    return (
-        <div className="container">
-            <motion.div
-                className="spinner"
-                animate={{ rotate: 360 }}
-                transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "linear",
-                }}
-            />
-            <StyleSheet />
-        </div>
-    )
+  return (
+    <div className="container">
+      <motion.div
+        className="spinner"
+        animate={{ rotate: 360 }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+      <StyleSheet />
+    </div>
+  );
 }
 
 /**
  * ==============   Styles   ================
  */
 function StyleSheet() {
-    return (
-        <style>
-            {`
+  return (
+    <style>
+      {`
             .container {
                 display: flex;
                 justify-content: center;
@@ -35,16 +35,17 @@ function StyleSheet() {
             }
 
             .spinner {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                border: 4px solid var(--divider);
-                border-top-color: #0a0e14;
-                will-change: transform;
-            }
-            `}
-        </style>
-    )
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 4px solid #334155; /* slate-700 */
+  border-top-color: #cbd5e1;
+  will-change: transform;
 }
 
-export default LoadingCircleSpinner
+            `}
+    </style>
+  );
+}
+
+export default LoadingCircleSpinner;
