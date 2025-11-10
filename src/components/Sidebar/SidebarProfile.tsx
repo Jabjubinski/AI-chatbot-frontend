@@ -74,7 +74,7 @@ export default function SidebarProfile() {
         </CustomButton>
 
         {isOpen && isClicked && (
-          <div className="absolute bottom-full mb-2 transition-opacity duration-300 border text-sm border-[#0A0A0A] rounded-xl bg-[#202020] flex flex-col min-w-full right-0 shadow-xl shadow-black/30">
+          <div className="absolute bottom-full mb-2 transition-opacity duration-300 border text-sm border-[#020617] rounded-xl bg-[#060b25] flex flex-col min-w-full right-0 shadow-xl shadow-black/30">
             <CustomButton className="hover:bg-neutral-800 p-2 cursor-pointer flex gap-2 items-center">
               <Sparkle className="w-5" />
               <span>Upgrade plan</span>

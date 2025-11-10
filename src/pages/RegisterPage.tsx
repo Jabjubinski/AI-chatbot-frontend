@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import type { SafeUserRegister } from "../types";
 import { useAuthStore } from "../stores/authStore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomButton from "../components/UI/CustomButton";
 
 export default function RegisterPage() {
@@ -124,6 +124,12 @@ export default function RegisterPage() {
               <p className="text-center text-gray-500 text-xs mt-2">
                 By continuing, you agree to our Terms of Service
               </p>
+               <span className="flex gap-2 w-full justify-center text-center text-slate-500 text-xs mt-2">
+                <span>Already have an account?</span>
+                <Link
+                className="text-blue-400"
+                to="/login">sign in</Link>
+              </span>
             </form>
           </div>
         </div>

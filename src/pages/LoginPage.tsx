@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import type { SafeUserRegister } from "../types";
 import { useAuthStore } from "../stores/authStore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
@@ -127,6 +127,13 @@ export default function LoginPage() {
               <p className="text-center text-slate-500 text-xs mt-2">
                 By continuing, you agree to our Terms of Service
               </p>
+
+              <span className="flex gap-2 w-full justify-center text-center text-slate-500 text-xs mt-2">
+                <span>don't have an account?</span>
+                <Link
+                className="text-blue-400"
+                to="/Register">sign up</Link>
+              </span>
             </form>
           </div>
         </div>
