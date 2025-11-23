@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar/Sidebar";
 
 export default function CustomOutlet() {
   return (
-    <div className="flex flex-row h-dvh w-full bg-slate-950 text-slate-100">
+    <div className="flex h-dvh w-full bg-slate-900 text-slate-100">
       <div className="relative z-10 flex flex-row w-full h-full">
         <Sidebar />
 

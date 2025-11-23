@@ -58,64 +58,9 @@ function ConversationCreate() {
       <div className="relative z-10 h-full flex flex-col border-r border-slate-800/60 overflow-hidden">
         {/* Header */}
 
-        {/* Category Tags */}
-        {/* <div className="px-8 h-1/8 flex flex-wrap  py-4 border-b border-slate-800/60">
-          <div className="flex flex-wrap gap-2">
-            <CustomButton
-              disabled={selectedTags.length === 0}
-              onClick={() => setSelectedTags([])}
-              className={clsx(
-                "px-4 py-2 relative rounded-lg text-sm font-medium transition-all duration-200",
-                selectedTags.length === 0
-                  ? "bg-gradient-to-r bg-[#2c3a4a] border-[#0a0e14] text-white shadow-lg shadow-black/30"
-                  : "bg-slate-800/50 text-slate-400 border border-slate-700/50 hover:bg-slate-800/80 hover:text-slate-300 hover:border-slate-600"
-              )}
-            >
-              {selectedAssistants.length > 0 && (
-                <span className="px-2 py-0.5 text-black left-[85%] z-50 bottom-[70%] absolute rounded-full bg-white">
-                  {selectedAssistants.length}
-                </span>
-              )}
-              All
-            </CustomButton>
-            {assistant_tags.map((tag) => (
-              <CustomButton
-                key={tag.id}
-                onClick={() =>
-                  selectedTags.includes(tag.id)
-                    ? setSelectedTags((prev) =>
-                        prev.filter((f) => f !== tag.id)
-                      )
-                    : setSelectedTags((prev) => [...prev, tag.id])
-                }
-                className={clsx(
-                  "px-4 py-2 relative rounded-lg text-sm font-medium transition-all duration-200",
-                  selectedTags.includes(tag.id)
-                    ? "bg-gradient-to-r bg-[#2c3a4a] border-[#0a0e14] text-white shadow-lg shadow-black/30"
-                    : "bg-slate-800/50 text-slate-400 border border-slate-700/50 hover:bg-slate-800/80 hover:text-slate-300 hover:border-slate-600"
-                )}
-              >
-                {selectedAssistants.filter((a) => a.id === tag.id).length >
-                  0 && (
-                  <span className="px-2 py-0.5 left-[85%] z-50 bg-slate-800/70 bottom-[70%] absolute rounded-full text-white">
-                    {selectedAssistants.filter((a) => a.id === tag.id).length}
-                  </span>
-                )}
-                {tag.name}
-              </CustomButton>
-            ))}
-          </div>
-        </div> */}
-
+        {/* 
         <div className="flex text-center h-6/8 flex-col justify-center items-center gap-3">
-          <div className="px-8 py-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r text-white opacity-80 bg-clip-text mb-2">
-              Start a Conversation
-            </h1>
-            <p className="text-slate-400 text-sm">
-              Select one or multiple assistants to begin
-            </p>
-          </div>
+        
 
           <div className="px-8 w-1/2 flex flex-wrap   ">
             <div className="flex flex-wrap gap-2">
@@ -166,7 +111,7 @@ function ConversationCreate() {
           </div>
 
           <div className="w-full flex flex-col items-center gap-4 justify-center ">
-            {/* Categories */}
+            Categories
             <div className=" w-1/2 overflow-y-auto">
               {loading ? (
                 <div className="flex w-full py-20 justify-center">
@@ -175,7 +120,6 @@ function ConversationCreate() {
               ) : (
                 <div className="px-8 py-6">
                   <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 overflow-y-scroll gap-4">
-                    {/* Selected Assistant Card */}
 
                     {assistants.map((assistant) => (
                       <CustomButton
@@ -238,15 +182,25 @@ function ConversationCreate() {
               )}
             </div>
           </div>
+        </div> */}
+        <div className="h-4/8 flex items-end justify-center">
+          {loading ? (
+            <div className="flex items-end justify-center">
+              <LoadingCircleSpinner />
+            </div>
+          ) : (
+            <div className="px-8 py-6 flex flex-col items-center">
+              <h1 className="text-4xl font-bold bg-gradient-to-r text-white opacity-80 bg-clip-text mb-2">
+                Start a Conversation
+              </h1>
+              <p className="text-slate-400 text-md">
+                I am your scientific agent, ask me anything!
+              </p>
+            </div>
+          )}
         </div>
 
-        <motion.div
-          animate={{
-            y: selectedAssistants.length > 0 ? 0 : "100%",
-            opacity: selectedAssistants.length > 0 ? 1 : 0,
-          }}
-          className="w-full h-2/8 justify-end backdrop-blur-sm flex flex-col"
-        >
+        <div className="w-full h-4/8 justify-end backdrop-blur-sm flex flex-col">
           {/* Message Input */}
           <div className="px-6 py-4 flex w-full justify-center">
             <div className="w-1/2 h-14 flex relative">
@@ -254,28 +208,16 @@ function ConversationCreate() {
                 type="text"
                 onChange={(e) => setPrompt(e.target.value)}
                 value={prompt}
-                disabled={selectedAssistants.length < 1 || loading}
-                placeholder={
-                  selectedAssistants.length === 0
-                    ? "Please select at least one assistant..."
-                    : "Share your thoughts..."
-                }
-                className={clsx(
-                  "w-full px-4 py-3 rounded-lg border  border-slate-700/50 outline-none transition-all duration-200 resize-none bg-slate-800/50 text-slate-100 placeholder:text-slate-500 focus:border-[#0a0e14]/50 focus:ring-2 focus:ring-blue-500/20 hover:border-slate-600",
-                  (selectedAssistants.length === 0 || loading) &&
-                    "cursor-not-allowed bg-slate-800"
-                )}
+                disabled={loading}
+                placeholder="Ask me anything..."
+                className="w-full px-4 py-3 rounded-lg border  border-slate-700/50 outline-none transition-all duration-200 resize-none bg-slate-800/50 text-slate-100 placeholder:text-slate-500 focus:border-[#0a0e14]/50 focus:ring-2 focus:ring-blue-500/20 hover:border-slate-600"
               />
 
               <div className="w-fit flex justify-center">
                 <CustomButton
                   onClick={handleSubmit}
-                  disabled={selectedAssistants.length < 1 || loading}
-                  className={clsx(
-                    "p-3 rounded-full absolute right-2 top-2 font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r bg-[#2c3a4a] text-white hover:shadow-lg hover:shadow-gray-900 hover:-translate-y-0.5 active:translate-y-0",
-                    (selectedAssistants.length < 1 || loading) &&
-                      "cursor-not-allowed hover:bg-[#2c3a4a] hover:text-white hover:shadow-none hover:translate-y-0"
-                  )}
+                  disabled={loading}
+                  className="p-3 rounded-full absolute right-2 top-2 font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r bg-[#2c3a4a] text-white hover:shadow-lg hover:shadow-gray-900 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   <img
                     src={icons.arrowRight.src}
@@ -286,7 +228,7 @@ function ConversationCreate() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -25,8 +25,7 @@ export default function CustomInput({
   return (
     <div
       className={clsx(
-        // 🌿 soft dark gradient background
-        "bg-[#445C4A]/50 h-4/6 rounded-4xl relative shadow-lg shadow-black/10 border border-[#445C4A]/30",
+        "bg-[#0F172A]/50 h-4/6 rounded-4xl relative shadow-lg shadow-black/10 border border-[#38BDF8]/20",
         className
       )}
     >
@@ -60,7 +59,7 @@ export default function CustomInput({
           <CustomButton
             type="submit"
             disabled={disabled}
-            className="bg-[#A8E6A3]/60 p-2.5 rounded-full cursor-pointer hover:bg-[#B6EBB4]/70 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-slate-800/60 p-2.5 rounded-full cursor-pointer hover:bg-slate-700/70 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <img src={icons.arrowUp.src} alt={icons.arrowUp.alt} className="opacity-75" />
           </CustomButton>

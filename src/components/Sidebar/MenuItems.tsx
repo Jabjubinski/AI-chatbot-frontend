@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import useSidebar from "../../hooks/useSidebar";
-import { FolderKanban, Library, Plus, Search } from "lucide-react";
+import { FolderKanban, Home, Search, Sparkles } from "lucide-react";
 import clsx from "clsx";
 
 export default function MenuItems() {
   const { isOpen } = useSidebar();
 
   const menuItems = [
-    { icon: Plus, label: "New Chat", link: "/" },
-    { icon: Library, label: "Library", link: "" },
+    { icon: Home, label: "Home", link: "/" },
     { icon: FolderKanban, label: "Projects", link: "" },
+    { icon: Sparkles, label: "Ask our agent", link: "/cs" },
     { icon: Search, label: "Search", link: "/c/search" },
   ];
 

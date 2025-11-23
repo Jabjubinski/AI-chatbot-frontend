@@ -15,6 +15,9 @@ import folderKanban from "../../assets/icons/folder-kanban.svg";
 import clipboardCheck from "../../assets/icons/clipboard-check.svg"
 import check from "../../assets/icons/check.svg"
 import x from "../../assets/icons/x.svg"
+import sparkles from "../../assets/icons/sparkles.svg"
+import eclipse from "../../assets/icons/eclipse.svg"
+import share from "../../assets/icons/share-2.svg"
 
 const icons = {
   arrowRight: { src: arrowRight, alt: "Arrow right" },
@@ -33,7 +36,10 @@ const icons = {
   folderKanban: { src: folderKanban, alt: "Kanban folder" },
   clipboardCheck: {src: clipboardCheck, alt: "Clipboard check"},
   check: {src: check, alt: "check"},
-  x: {src: x, alt: "x"}
+  x: {src: x, alt: "x"},
+  sparkles: {src: sparkles, alt:"sparkles"},
+  eclipse: {src: eclipse, alt:"eclipse"},
+  share: {src: share, alt: "share"},
 };
 
 export default icons;
