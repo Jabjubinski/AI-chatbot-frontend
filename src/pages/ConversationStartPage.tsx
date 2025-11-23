@@ -1,46 +1,20 @@
-import { useAssistantTagStore } from "../stores/assistantTagStore";
-import { useEffect, useState } from "react";
-import { useAssistantStore } from "../stores/assistantStore";
-import clsx from "clsx";
-import type { SafeAssistant } from "../types";
+import { useState } from "react";
 import { useConversationsStore } from "../stores/conversationsStore";
 import CustomButton from "../components/UI/CustomButton";
 import icons from "../components/UI/icons";
 import { useNavigate } from "react-router-dom";
 import LoadingCircleSpinner from "../components/UI/LoadingCircle";
-import { motion } from "motion/react";
 
 function ConversationCreate() {
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [prompt, setPrompt] = useState("");
-  const [selectedAssistants, setSelectedAssistants] = useState<SafeAssistant[]>(
-    []
-  );
-  const { assistant_tags, fetchAssistantTags } = useAssistantTagStore();
-  const { assistants, fetchAssistants } = useAssistantStore();
   const { create, loading } = useConversationsStore();
 
   const navigate = useNavigate();
 
-  console.log(selectedTags);
-  console.log(selectedAssistants);
-
-  useEffect(() => {
-    fetchAssistantTags();
-  }, [fetchAssistantTags]);
-
-  useEffect(() => {
-    fetchAssistants(selectedTags);
-    console.log("heyyyy", assistants);
-  }, [selectedTags, fetchAssistants]);
-
   const handleSubmit = async () => {
-    const assistantIds: number[] = selectedAssistants.map((a) => a.id);
-
     try {
       const newConversation = await create({
         content: prompt,
-        assistants: assistantIds,
       });
 
       // If successful and we have an ID, navigate to it.

@@ -23,24 +23,10 @@ export interface SafeUserLogin {
   password: string;
 }
 
-export interface SafeAssistantTag {
-  id: number;
-  name: string;
-}
-
-export interface SafeAssistant {
-  id: number;
-  name: string;
-  tag: string;
-  description: string;
-  created_at: string;
-}
-
 export interface SafeConversation {
   id: number;
   title: string;
   created_at: string;
-  assistants: SafeAssistant[]
 }
 
 export interface SafeMessage {
@@ -48,4 +34,11 @@ export interface SafeMessage {
   role: "user" | "assistant";
   content: string;
   created_at: string;
+}
+
+
+export interface SafeBlog {
+  id: number;
+  blog_title: string;
+  summary: string;
 }

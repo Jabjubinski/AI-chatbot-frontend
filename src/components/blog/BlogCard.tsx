@@ -1,12 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { useConversationsStore } from "../../stores/conversationsStore";
 import icons from "../UI/icons";
+import type { SafeBlog } from "../../types";
 
-interface FeedCardProps {
-  results: any;
+interface BlogFeedProps {
+  id: number
+  blog_title: string;
+  summary: string
+  ref?: any
 }
 
-export default function FeedCard({ results }: FeedCardProps) {
+export default function BlogCard({ id, blog_title, summary, ref }: BlogFeedProps) {
   const navigate = useNavigate();
   const { create, loading } = useConversationsStore();
 
@@ -14,7 +18,6 @@ export default function FeedCard({ results }: FeedCardProps) {
     try {
       const newConversation = await create({
         content: prompt,
-        assistants: [],
       });
       if (newConversation) {
         navigate(`/c/${newConversation}`);
@@ -24,29 +27,21 @@ export default function FeedCard({ results }: FeedCardProps) {
     }
   };
 
-  if (!results || results.length === 0) {
-    return <div className="text-center text-slate-500 py-10">No results found.</div>;
-  }
-
   return (
-    <div className="flex flex-col gap-6">
-      {results
-        .filter((item: any) => item?.inline_links?.type !== "book")
-        .map((item: any, i: number) => (
-          <article
-            key={i}
+        <article
+            ref={ref}
             className="group relative flex flex-col overflow-hidden rounded-2xl bg-[#1E293B]/40 border border-white/5 hover:border-white/10 transition-all duration-300 backdrop-blur-sm"
           >
             {/* Header: Title & Authors */}
             <div className="p-5 pb-3">
               <h3 className="text-lg font-semibold text-slate-100 leading-snug mb-1 transition-colors">
-                {item?.title}
+                {blog_title}
               </h3>
-              <p className="text-sm text-slate-400 font-medium">
-                {item.publication_info.authors
+              {/* <p className="text-sm text-slate-400 font-medium">
+                {item..authors
                   ?.map((author: any) => author.name)
                   .join(", ")}
-              </p>
+              </p> */}
             </div>
 
             {/* Media & Content */}
@@ -54,7 +49,7 @@ export default function FeedCard({ results }: FeedCardProps) {
               {/* Image Container with overflow hidden for zoom effect */}
               <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden mb-4 bg-slate-800 border border-white/5">
                 <img
-                  src={`https://picsum.photos/1000/${600 + i}`}
+                  src={`https://picsum.photos/1000/${600 + id}`}
                   alt="Publication preview"
                   loading="lazy"
                   className="w-full h-full object-cover"
@@ -62,7 +57,7 @@ export default function FeedCard({ results }: FeedCardProps) {
               </div>
 
               <p className="text-slate-300 text-sm leading-relaxed line-clamp-3 mb-4">
-                {item?.snippet}
+                {summary}
               </p>
             </div>
 
@@ -71,7 +66,7 @@ export default function FeedCard({ results }: FeedCardProps) {
               
               {/* Primary Link */}
               <a
-                href={item?.link}
+                href={`${id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-sky-400 hover:text-sky-300 hover:bg-sky-500/10 rounded-lg transition-all"
@@ -80,9 +75,7 @@ export default function FeedCard({ results }: FeedCardProps) {
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
               </a>
 
-              {/* Action Buttons */}
               <div className="flex items-center gap-2">
-                {/* Share Button */}
                 <button 
                   className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-full transition-all"
                   title="Share"
@@ -97,7 +90,7 @@ export default function FeedCard({ results }: FeedCardProps) {
                 {/* Ask AI Button (Primary Action) */}
                 <button
                   disabled={loading}
-                  onClick={() => handleAsk(`write about of: ${item?.snippet}`)}
+                  onClick={() => handleAsk(`write about of: ${summary}`)}
                   className="flex items-center gap-2 pl-3 pr-4 py-1.5 rounded-full bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 hover:border-sky-500/40 text-sky-100 text-sm font-medium transition-all group/btn"
                 >
                   <img 
@@ -109,8 +102,6 @@ export default function FeedCard({ results }: FeedCardProps) {
                 </button>
               </div>
             </div>
-          </article>
-        ))}
-    </div>
+        </article>
   );
 }
