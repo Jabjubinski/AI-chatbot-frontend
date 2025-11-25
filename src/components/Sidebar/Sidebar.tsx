@@ -39,19 +39,20 @@ export default function Sidebar() {
         {/* Sidebar Panel */}
         <div
           className={clsx(
-            "h-full flex flex-col justify-between",
+            "h-full flex flex-col", // Removed justify-between (flex-1 handles spacing now)
             "bg-[#020617] border-r border-slate-800/60",
             "transition-all duration-500 ease-out",
             "absolute inset-y-0 left-0 z-50",
             "sm:relative sm:inset-auto sm:z-auto",
             "w-64",
+            // Width transitions
             isOpen
               ? "translate-x-0 opacity-100 sm:w-64 shadow-xl shadow-black/50"
               : "-translate-x-full opacity-0 sm:w-20 sm:translate-x-0 sm:opacity-100 sm:shadow-lg sm:shadow-black/30"
           )}
         >
-          {/* Header */}
-          <div className="space-y-0">
+          {/* --- TOP SECTION (Header & Menu) --- */}
+          <div className="space-y-0 shrink-0">
             <div className="p-4 flex items-center justify-between border-b border-slate-800/40">
               <CustomButton
                 onClick={() => toggleOpen()}
@@ -79,14 +80,29 @@ export default function Sidebar() {
             </div>
           </div>
 
-          {/* Profile Footer */}
+          {/* --- MIDDLE SECTION (Conversation List) --- */}
+          {/* flex-1 pushes the footer down and fills available space */}
+          <div className="flex-1 overflow-hidden flex flex-col relative">
+            <div
+              className={clsx(
+                "absolute inset-0 overflow-y-auto px-2 py-3 transition-all duration-500",
+                // Logic: If sidebar is open, show list. If closed, hide it so text doesn't look messy in narrow mode
+                isOpen
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-4 pointer-events-none"
+              )}
+            >
+              <ConversationList />
+            </div>
+          </div>
+
+          {/* --- BOTTOM SECTION (Profile Footer) --- */}
           <div
             className={clsx(
-              "border-t border-slate-800/40 bg-slate-900/50 backdrop-blur-md w-full",
+              "border-t border-slate-800/40 bg-slate-900/50 backdrop-blur-md w-full shrink-0",
               "transition-all duration-500"
             )}
           >
-            {/* This div correctly shrinks the profile when in collapsed state */}
             <div
               className={clsx(
                 "transition-all duration-500 w-full",
@@ -101,23 +117,3 @@ export default function Sidebar() {
     </>
   );
 }
-
-// {/* Conversation List */}
-// <div
-//   className={clsx(
-//     "flex-1 overflow-hidden flex flex-col",
-//     "transition-all duration-500"
-//   )}
-// >
-//   {/* This div correctly fades/hides content when in the collapsed (desktop) state */}
-//   <div
-//     className={clsx(
-//       "flex-1 overflow-y-auto px-2 py-3 transition-all duration-500",
-//       isOpen
-//         ? "opacity-100 translate-x-0"
-//         : "opacity-0 -translate-x-4 pointer-events-none"
-//     )}
-//   >
-//     <ConversationList />
-//   </div>
-// </div>
