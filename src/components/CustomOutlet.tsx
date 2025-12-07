@@ -1,25 +1,28 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar/Sidebar";
-import useTheme from "../hooks/useLighMode";
-import clsx from "clsx";
+import {
+  SidebarProvider,
+  SidebarInset,
+  // SidebarTrigger,
+  Sidebar,
+} from "@/components/UI/sidebar";
+
+import AppSidebar from "./Sidebar/Sidebar";
 
 export default function CustomOutlet() {
-  const { isLight } = useTheme();
-
   return (
-    <div
-      className={clsx(
-        "flex h-dvh w-full ",
-        isLight ? "bg-white text-black" : "bg-[#0B1120] text-slate-100"
-      )}
-    >
-      <div className="relative z-10 flex flex-row w-full h-full">
-        <Sidebar />
+    <SidebarProvider>
+      <Sidebar>
+        <AppSidebar />
+      </Sidebar>
 
+      <SidebarInset>
+        <header className="flex h-14 items-center gap-2 border-b px-4 lg:h-[60px]">
+          <span className="text-3xl bold">Lithos</span>
+        </header>
         <main className="flex-1 h-full overflow-hidden">
           <Outlet />
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

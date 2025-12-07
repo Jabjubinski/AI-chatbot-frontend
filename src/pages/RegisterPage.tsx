@@ -2,12 +2,31 @@ import { useForm } from "react-hook-form";
 import type { SafeUserRegister } from "../types";
 import { useAuthStore } from "../stores/authStore";
 import { Link, useNavigate } from "react-router-dom";
-import CustomButton from "../components/UI/CustomButton";
+import { ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import { useState } from "react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription, // Added for consistency
+  CardHeader, // Added for consistency
+  CardTitle,
+} from "@/components/UI/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label"; // Using Shadcn Label
 
 export default function RegisterPage() {
   const { register: userRegister } = useAuthStore();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<SafeUserRegister>({
+  const [isLoading, setIsLoading] = useState(false);
+  const [globalError, setGlobalError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SafeUserRegister>({
     defaultValues: {
       firstname: "",
       lastname: "",
@@ -19,119 +38,242 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: SafeUserRegister) => {
-    const status = await userRegister(data);
-    if (!status) return console.log("Something went wrong");
-    console.log("Success");
-    navigate("/login");
+    setIsLoading(true);
+    setGlobalError("");
+
+    try {
+      const status = await userRegister(data);
+      if (!status) {
+        setGlobalError("Failed to create account. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+      navigate("/login");
+    } catch (err) {
+      setGlobalError("An unexpected error occurred.");
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#1E1E1E] from-30% via-[#494835] to-70% to-[#1E1E1E] relative overflow-hidden">
-      {/* Subtle animated grid background */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    <div className="h-dvh flex w-full overflow-hidden bg-white">
+      {/* Left Side - Form */}
+      <Card className="w-full md:w-1/2 h-full flex flex-col justify-center rounded-none border-0 shadow-none overflow-y-auto">
+        <div className="w-full max-w-md mx-auto px-8 py-8">
+          <CardHeader className="flex flex-col text-center space-y-2 p-0 mb-8">
+            <CardTitle className="text-2xl font-bold tracking-tight">
+              Create your account
+            </CardTitle>
+            <CardDescription>
+              Enter your details below to get started
+            </CardDescription>
+          </CardHeader>
 
-      {/* Subtle glow effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-700/20 rounded-full blur-3xl"></div>
+          <CardContent className="p-0">
+            {/* Global Error Alert */}
+            {globalError && (
+              <div className="mb-6 p-3 rounded-md bg-destructive/15 text-destructive text-sm flex items-center gap-2 border border-destructive/20">
+                <AlertCircle className="w-4 h-4" />
+                <span>{globalError}</span>
+              </div>
+            )}
 
-      <div className="relative w-full max-w-md mx-4 z-10">
-        {/* Modern card with subtle backdrop blur */}
-        <div className="bg-gray-950/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-800/50 p-10 relative overflow-hidden">
-          {/* Subtle top border glow */}
-          <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
-
-          <div className="relative z-10">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-2 text-center tracking-tight">
-                Create your account
-              </h2>
-              <p className="text-gray-400 text-center text-sm">
-                Please enter your details to get started
-              </p>
-            </div>
-
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-5"
-            >
-              {/* Name fields */}
-              <div className="flex gap-4">
-                <div className="flex-1 group">
-                  <input
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Row 1: Names */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1 grid gap-2">
+                  <Label htmlFor="firstname">First Name</Label>
+                  <Input
+                    id="firstname"
                     type="text"
-                    placeholder="First Name"
-                    {...register("firstname", { required: true })}
-                    className="w-full bg-gray-900/50 border border-gray-700/50 rounded-xl h-12 px-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-gray-600 focus:bg-gray-900 transition-all duration-200 hover:border-gray-600/70"
+                    placeholder="John"
+                    disabled={isLoading}
+                    className={
+                      errors.firstname
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }
+                    {...register("firstname", {
+                      required: "First name is required",
+                    })}
                   />
+                  {errors.firstname && (
+                    <span className="text-xs text-red-500">
+                      {errors.firstname.message}
+                    </span>
+                  )}
                 </div>
-                <div className="flex-1 group">
-                  <input
+                <div className="flex-1 grid gap-2">
+                  <Label htmlFor="lastname">Last Name</Label>
+                  <Input
+                    id="lastname"
                     type="text"
-                    placeholder="Last Name"
-                    {...register("lastname", { required: true })}
-                    className="w-full bg-gray-900/50 border border-gray-700/50 rounded-xl h-12 px-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-gray-600 focus:bg-gray-900 transition-all duration-200 hover:border-gray-600/70"
+                    placeholder="Doe"
+                    disabled={isLoading}
+                    className={
+                      errors.lastname
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }
+                    {...register("lastname", {
+                      required: "Last name is required",
+                    })}
                   />
+                  {errors.lastname && (
+                    <span className="text-xs text-red-500">
+                      {errors.lastname.message}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* Email field */}
-              <div className="group">
-                <input
+              {/* Email */}
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
                   type="email"
-                  placeholder="email@gmail.com"
-                  {...register("email", { required: true })}
-                  className="w-full bg-gray-900/50 border border-gray-700/50 rounded-xl h-12 px-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-gray-600 focus:bg-gray-900 transition-all duration-200 hover:border-gray-600/70"
+                  placeholder="email@example.com"
+                  disabled={isLoading}
+                  className={
+                    errors.email
+                      ? "border-red-500 focus-visible:ring-red-500"
+                      : ""
+                  }
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
                 />
+                {errors.email && (
+                  <span className="text-xs text-red-500">
+                    {errors.email.message}
+                  </span>
+                )}
               </div>
 
-              {/* Password field */}
-              <div className="group">
-                <input
+              {/* Password */}
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
                   type="password"
-                  placeholder="Password"
-                  {...register("password", { required: true })}
-                  className="w-full bg-gray-900/50 border border-gray-700/50 rounded-xl h-12 px-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-gray-600 focus:bg-gray-900 transition-all duration-200 hover:border-gray-600/70"
+                  placeholder="Create a password"
+                  disabled={isLoading}
+                  className={
+                    errors.password
+                      ? "border-red-500 focus-visible:ring-red-500"
+                      : ""
+                  }
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
                 />
+                {errors.password && (
+                  <span className="text-xs text-red-500">
+                    {errors.password.message}
+                  </span>
+                )}
               </div>
 
-              {/* Country and phone */}
-              <div className="flex gap-4">
-                <div className="w-2/5 group">
-                  <input
+              {/* Row 2: Location/Contact */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="w-full md:w-2/5 grid gap-2">
+                  <Label htmlFor="country">Country</Label>
+                  <Input
+                    id="country"
                     type="text"
                     placeholder="Country"
-                    {...register("country", { required: true })}
-                    className="w-full bg-gray-900/50 border border-gray-700/50 rounded-xl h-12 px-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-gray-600 focus:bg-gray-900 transition-all duration-200 hover:border-gray-600/70"
+                    disabled={isLoading}
+                    className={
+                      errors.country
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }
+                    {...register("country", {
+                      required: "Country is required",
+                    })}
                   />
+                  {errors.country && (
+                    <span className="text-xs text-red-500">
+                      {errors.country.message}
+                    </span>
+                  )}
                 </div>
-                <div className="flex-1 group">
-                  <input
+                <div className="flex-1 grid gap-2">
+                  <Label htmlFor="mobile">Phone Number</Label>
+                  <Input
+                    id="mobile"
                     type="tel"
-                    placeholder="Phone Number"
-                    {...register("mobile", { required: true })}
-                    className="w-full bg-gray-900/50 border border-gray-700/50 rounded-xl h-12 px-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-600 focus:border-gray-600 focus:bg-gray-900 transition-all duration-200 hover:border-gray-600/70"
+                    placeholder="+1 (555) 000-0000"
+                    disabled={isLoading}
+                    className={
+                      errors.mobile
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }
+                    {...register("mobile", {
+                      required: "Phone number is required",
+                    })}
                   />
+                  {errors.mobile && (
+                    <span className="text-xs text-red-500">
+                      {errors.mobile.message}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* Submit CustomButton */}
-              <CustomButton
-                type="submit"
-                className="w-full mt-3 h-12 rounded-xl bg-white text-black font-semibold hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-gray-950 active:scale-[0.99] shadow-lg shadow-white/5"
-              >
-                Continue
-              </CustomButton>
+              {/* Actions */}
+              <div className="flex flex-col gap-4 mt-6 pt-2">
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    <>
+                      Create Account
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </>
+                  )}
+                </Button>
 
-              <p className="text-center text-gray-500 text-xs mt-2">
-                By continuing, you agree to our Terms of Service
-              </p>
-               <span className="flex gap-2 w-full justify-center text-center text-slate-500 text-xs mt-2">
-                <span>Already have an account?</span>
-                <Link
-                className="text-blue-400"
-                to="/login">sign in</Link>
-              </span>
+                <p className="text-center text-slate-500 text-xs mt-2">
+                  By continuing, you agree to our Terms of Service
+                </p>
+
+                <div className="flex gap-2 w-full justify-center text-center text-slate-500 text-xs">
+                  <span>Already have an account?</span>
+                  <Link
+                    className="text-blue-500 hover:underline font-medium"
+                    to="/login"
+                  >
+                    Sign in
+                  </Link>
+                </div>
+              </div>
             </form>
-          </div>
+          </CardContent>
+        </div>
+      </Card>
+
+      {/* Right Side - Visual / Background */}
+      <div className="hidden md:flex w-1/2 h-full bg-slate-50 items-center justify-center border-l relative overflow-hidden">
+        {/* Optional Gradient or Image */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200" />
+        <div className="relative z-10 p-10 text-center">
+          <h3 className="text-xl font-medium text-slate-700">
+            "Join the Lithos community."
+          </h3>
         </div>
       </div>
     </div>

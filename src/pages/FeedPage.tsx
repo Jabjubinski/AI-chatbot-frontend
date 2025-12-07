@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header/Header";
 import { apiV2 } from "../utils/axios";
-import FeedCard from "../components/feed/FeedCard";
 import { useAuthStore } from "../stores/authStore";
 import { Loader2 } from "lucide-react"; // Imported a modern loader icon
 
@@ -107,7 +106,7 @@ export default function FeedPage() {
           {/* Feed Section */}
           <div className="w-full max-w-2xl">
             {isLoading && (
-              <div className="text-center py-10 text-slate-400 flex items-center justify-center gap-2">
+              <div className="text-center py-10  flex items-center justify-center gap-2">
                 <Loader2 className="w-5 h-5 animate-spin text-sky-500" />
                 <span>Loading results...</span>
               </div>
@@ -115,7 +114,7 @@ export default function FeedPage() {
 
             {!isLoading && results.length === 0 && (
               <div className="text-center py-16 px-4 bg-slate-900/30 border border-slate-800/50 rounded-xl text-slate-500">
-                <h3 className="text-lg font-semibold text-slate-300 mb-1">
+                <h3 className="text-lg font-semibold  mb-1">
                   No Results Found
                 </h3>
                 <p>Try a different search query or check your spelling.</p>

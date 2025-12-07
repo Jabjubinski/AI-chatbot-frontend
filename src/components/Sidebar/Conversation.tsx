@@ -18,7 +18,7 @@ export default function Conversation({ conversation }: ConversationProps) {
     <div className="relative group transition-opacity duration-300 ease-in-out">
       <Link
         to={`/c/${conversation.id}`}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-800 transition-colors text-left 
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg  transition-colors text-left 
         
       `}
       >
@@ -28,10 +28,10 @@ export default function Conversation({ conversation }: ConversationProps) {
           className="w-5 h-5 opacity-75"
         />
         <div className="flex-1 min-w-0">
-          <div className="text-sm text-neutral-200 truncate">
+          <div className="text-sm  truncate">
             {conversation.title}
           </div>
-          <div className="text-xs text-neutral-500">
+          <div className="text-xs">
             {conversation.created_at
               ? format(new Date(conversation.created_at), "yyyy-MM-dd")
               : ""}
@@ -39,9 +39,9 @@ export default function Conversation({ conversation }: ConversationProps) {
         </div>
       </Link>
 
-      <div className="absolute hidden group-hover:flex right-2 top-1/2 -translate-y-1/2 items-center gap-1 bg-neutral-800 rounded-lg p-1">
+      <div className="absolute hidden group-hover:flex right-2 top-1/2 -translate-y-1/2 items-center gap-1 bg-gray-200 rounded-lg p-1">
         <CustomButton
-          className="p-1.5 hover:bg-neutral-700  cursor-pointer rounded transition-colors"
+          className="p-1.5 hover:bg-gray-300  cursor-pointer rounded-lg transition-colors"
           aria-label="Delete chat"
           onClick={() => onOpen(conversation.id)}
         >

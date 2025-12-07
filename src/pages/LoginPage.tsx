@@ -2,10 +2,19 @@ import { useForm } from "react-hook-form";
 import type { SafeUserRegister } from "../types";
 import { useAuthStore } from "../stores/authStore";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2, AlertCircle } from "lucide-react"; // Added Loader2 and AlertCircle
 import { useState } from "react";
-import clsx from "clsx";
-import CustomButton from "../components/UI/CustomButton";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/UI/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label"; // Changed from @radix-ui to local component for styles
 
 export default function LoginPage() {
   const { login } = useAuthStore();
@@ -13,7 +22,11 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { register, handleSubmit } = useForm<SafeUserRegister>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }, // Destructure errors to show validation feedback
+  } = useForm<SafeUserRegister>({
     defaultValues: {
       email: "",
       password: "",
@@ -23,119 +36,150 @@ export default function LoginPage() {
   const onSubmit = async (data: SafeUserRegister) => {
     setIsLoading(true);
     setError("");
-    const status = await login(data);
-    if (!status) {
-      setError("Invalid credentials");
+
+    try {
+      const status = await login(data);
+      if (!status) {
+        setError("Invalid email or password.");
+        setIsLoading(false);
+        return;
+      }
+      navigate("/");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
       setIsLoading(false);
-      return;
     }
-    navigate("/");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute bottom-20 left-20 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
-      </div>
+    <div className="h-dvh flex w-full overflow-hidden bg-white">
+      {/* Left Side - Form */}
+      <Card className="w-full md:w-1/2 h-full flex flex-col justify-center rounded-none border-0 shadow-none">
+        <div className="w-full max-w-md mx-auto px-8">
+          <CardHeader className="flex flex-col text-center space-y-2 p-0 mb-8">
+            <CardTitle className="text-2xl font-bold tracking-tight">
+              Login to your Lithos account
+            </CardTitle>
+            <CardDescription>
+              Enter your email and password to log in
+            </CardDescription>
+          </CardHeader>
 
-      <div className="relative w-full max-w-md mx-4 z-10">
-        {/* Card */}
-        <div className="bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800/60 p-10 relative overflow-hidden">
-          {/* Top border glow */}
-          <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
-
-          <div className="relative z-10">
-            {/* Header */}
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-300 via-cyan-300 to-emerald-400 bg-clip-text text-transparent mb-2 text-center tracking-tight">
-                Welcome back
-              </h2>
-              <p className="text-slate-400 text-center text-sm">
-                Sign in to your account to continue
-              </p>
-            </div>
-
-            {/* Error message */}
+          <CardContent className="p-0">
+            {/* Global Error Alert */}
             {error && (
-              <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm text-center">
-                {error}
+              <div className="mb-6 p-3 rounded-md bg-destructive/15 text-destructive text-sm flex items-center gap-2 border border-destructive/20">
+                <AlertCircle className="w-4 h-4" />
+                <span>{error}</span>
               </div>
             )}
 
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-5"
-            >
-              {/* Email field */}
-              <div className="group">
-                <input
-                  type="email"
-                  placeholder="email@example.com"
-                  {...register("email", { required: true })}
-                  className={clsx(
-                    "w-full bg-slate-800/50 border border-slate-700/50 rounded-xl h-12 px-4 text-slate-100 placeholder:text-slate-500",
-                    "focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 focus:bg-slate-800/70",
-                    "transition-all duration-200 hover:border-slate-600/70"
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="flex flex-col gap-6">
+                {/* Email Field */}
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    disabled={isLoading}
+                    placeholder="email@example.com"
+                    className={
+                      errors.email
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
+                    })}
+                  />
+                  {errors.email && (
+                    <span className="text-xs text-red-500">
+                      {errors.email.message}
+                    </span>
                   )}
-                />
+                </div>
+
+                {/* Password Field */}
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Password</Label>
+                    <Link
+                      to="/forgot-password"
+                      className="text-xs text-blue-500 hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    disabled={isLoading}
+                    placeholder="Password"
+                    className={
+                      errors.password
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                  />
+                  {errors.password && (
+                    <span className="text-xs text-red-500">
+                      {errors.password.message}
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Password field */}
-              <div className="group">
-                <input
-                  type="password"
-                  placeholder="Password"
-                  {...register("password", { required: true })}
-                  className={clsx(
-                    "w-full bg-slate-800/50 border border-slate-700/50 rounded-xl h-12 px-4 text-slate-100 placeholder:text-slate-500",
-                    "focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 focus:bg-slate-800/70",
-                    "transition-all duration-200 hover:border-slate-600/70"
+              <div className="flex flex-col gap-4 mt-6">
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      Continue
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </>
                   )}
-                />
+                </Button>
+
+                <p className="text-center text-slate-500 text-xs mt-2">
+                  By continuing, you agree to our Terms of Service
+                </p>
+
+                <div className="flex gap-2 w-full justify-center text-center text-slate-500 text-xs">
+                  <span>Don't have an account?</span>
+                  <Link
+                    className="text-blue-500 hover:underline font-medium"
+                    to="/Register"
+                  >
+                    Sign up
+                  </Link>
+                </div>
               </div>
-
-              {/* Submit CustomButton */}
-              <CustomButton
-                type="submit"
-                disabled={isLoading}
-                className={clsx(
-                  "w-full mt-3 h-12 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2",
-                  "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
-                  isLoading
-                    ? "bg-slate-700/50 text-slate-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0"
-                )}
-              >
-                {isLoading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-slate-300 border-t-white rounded-full animate-spin"></div>
-                    Signing in...
-                  </>
-                ) : (
-                  <>
-                    Continue
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </CustomButton>
-
-              <p className="text-center text-slate-500 text-xs mt-2">
-                By continuing, you agree to our Terms of Service
-              </p>
-
-              <span className="flex gap-2 w-full justify-center text-center text-slate-500 text-xs mt-2">
-                <span>don't have an account?</span>
-                <Link
-                className="text-blue-400"
-                to="/Register">sign up</Link>
-              </span>
             </form>
-          </div>
+          </CardContent>
+        </div>
+      </Card>
+
+      {/* Right Side - Visual / Background */}
+      <div className="hidden md:flex w-1/2 h-full bg-slate-50 items-center justify-center border-l relative overflow-hidden">
+        {/* Optional: Add a subtle pattern or gradient if you don't have an image yet */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200" />
+        <div className="relative z-10 p-10">
+          {/* You can put a quote or a logo here */}
+          <h3 className="text-xl font-medium text-slate-700">
+            "Welcome back to Lithos."
+          </h3>
         </div>
       </div>
     </div>

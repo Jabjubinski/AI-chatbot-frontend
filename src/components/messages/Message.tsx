@@ -1,41 +1,69 @@
 import clsx from "clsx";
-import { Clipboard, ClipboardCheck, Copy } from "lucide-react";
-import React, { Activity, useState } from "react";
+import { ClipboardCheck, Clipboard } from "lucide-react"; 
+import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import CustomButton from "../UI/CustomButton";
-import icons from "../UI/icons";
+import { Button } from "@/components/ui/button"; 
+import { useAuthStore } from "../../stores/authStore";
+import type { SafeUser } from "../../types";
 
 interface MessageProps {
   role: "user" | "assistant";
   content: string;
+  sent_by: SafeUser | null;
 }
 
-export default function Message({ role, content }: MessageProps) {
-  const codeBlocks = [...content.matchAll(/```(\w+)?\n([\s\S]*?)```/g)];
+const CODE_BLOCK_REGEX = /```(\w+)?\n([\s\S]*?)```/g;
+
+export default function Message({ role, content, sent_by }: MessageProps) {
+  // We strictly don't need the auth store for alignment anymore, 
+  // but keeping it if you need 'user' for other logic.
+  const { user } = useAuthStore();
+
+  // --- FIX START ---
+  // We rely on 'role' for alignment. This fixes the "loading" and "first message"
+  // glitches where 'sent_by' might be null during optimistic updates.
+  const isOwnMessage = role === "user";
+  const isAssistantMessage = role === "assistant";
+
+  // We also update displayName to fallback to "You" if sent_by is missing 
+  // (e.g., during that split second before the server returns the user object).
+  const displayName = sent_by 
+    ? sent_by.firstname 
+    : isOwnMessage 
+      ? "You" 
+      : "Assistant";
+  // --- FIX END ---
+
+  const codeBlocks = [...content.matchAll(CODE_BLOCK_REGEX)];
 
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async (code: any) => {
+  const handleCopy = async (textToCopy: string) => {
     try {
-      await navigator.clipboard.writeText(code.trim());
+      await navigator.clipboard.writeText(textToCopy.trim());
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch (err) {
       console.error("Failed to copy:", err);
     }
-    setIsClicked(true);
   };
 
-  const [isClicked, setIsClicked] = useState(false);
+  const messageClasses = clsx("mb-4 max-w-[70%] text-base p-4 rounded-xl", {
+    "self-end ml-auto bg-blue-600 text-white rounded-br-none": isOwnMessage,
+    "self-start mr-auto bg-gray-100 text-gray-900 rounded-tl-none":
+      isAssistantMessage,
+  });
 
+  // --- SCENARIO 1: Message contains Code Blocks ---
   if (codeBlocks.length > 0) {
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
 
     codeBlocks.forEach((match, i) => {
-      const [full, language, code] = match;
+      const [fullMatch, language, code] = match;
       const start = match.index ?? 0;
+      const codeToCopy = code.trim();
 
       if (start > lastIndex) {
         parts.push(<p key={`text-${i}`}>{content.slice(lastIndex, start)}</p>);
@@ -44,14 +72,15 @@ export default function Message({ role, content }: MessageProps) {
       parts.push(
         <div
           key={`code-${i}`}
-          className="relative group my-2 rounded-lg overflow-hidden"
+          className="relative group my-2 rounded-lg overflow-hidden border border-gray-700/50"
         >
-          {/* Copy CustomButton */}
-          <CustomButton
-            onClick={() => handleCopy(code)}
+          <Button
+            onClick={() => handleCopy(codeToCopy)}
+            variant="ghost"
+            size="sm"
             className={clsx(
-              "absolute top-2 right-2 flex items-center gap-1 cursor-pointer text-xs px-2 py-1 rounded-md bg-gray-700/80 text-white opacity-0",
-              "group-hover:opacity-100 transition-opacity duration-200"
+              "absolute top-2 right-2 flex items-center gap-1 text-xs px-2 py-1 bg-gray-700/80 text-white hover:bg-gray-700",
+              "opacity-0 group-hover:opacity-100 transition-opacity duration-200"
             )}
           >
             {copied ? (
@@ -60,16 +89,11 @@ export default function Message({ role, content }: MessageProps) {
               </>
             ) : (
               <>
-                <img
-                  src={icons.copy.src}
-                  alt={icons.copy.alt}
-                  className="opacity-75"
-                />
+                <Clipboard size={14} /> Copy
               </>
             )}
-          </CustomButton>
+          </Button>
 
-          {/* Syntax Highlighter */}
           <SyntaxHighlighter
             language={language || "text"}
             style={oneDark}
@@ -81,12 +105,12 @@ export default function Message({ role, content }: MessageProps) {
               borderRadius: "0.5rem",
             }}
           >
-            {code.trim()}
+            {codeToCopy}
           </SyntaxHighlighter>
         </div>
       );
 
-      lastIndex = start + full.length;
+      lastIndex = start + fullMatch.length;
     });
 
     if (lastIndex < content.length) {
@@ -96,51 +120,65 @@ export default function Message({ role, content }: MessageProps) {
     return (
       <div
         className={clsx(
-          "mb-5 max-w-[80%]",
-          role === "user"
-            ? "self-end bg-[#33363D] text-indigo-50 rounded-l-3xl rounded-tr-3xl px-4 py-2"
-            : "self-start bg-[#0A0A0A]/10 text-slate-100 rounded-r-3xl rounded-tl-3xl px-4 py-2"
+          "w-full flex",
+          isOwnMessage ? "justify-end" : "justify-start"
         )}
       >
-        {parts}
+        <div className={messageClasses}>
+          <span
+            className={clsx(
+              "text-xs font-bold mb-2 uppercase tracking-wide",
+              isOwnMessage ? "text-white/80" : "text-gray-500"
+            )}
+          >
+            {displayName}
+          </span>
+          <div className="space-y-3">{parts}</div>
+        </div>
       </div>
     );
   }
 
+  // --- SCENARIO 2: Plain Text Message ---
   return (
-    <div className="w-full flex justify-center items-center">
-      <div className="flex flex-col justify-center items-start w-1/2">
+    <div
+      className={clsx(
+        "w-full flex",
+        isOwnMessage ? "justify-end" : "justify-start"
+      )}
+    >
+      <div className={messageClasses}>
         <span
           className={clsx(
-            "mb-2 max-w-[80%]",
-            role === "user"
-              ? "self-end bg-[#33363D] text-indigo-50 rounded-l-3xl rounded-tr-3xl px-4 py-2"
-              : "self-start bg-[#0A0A0A]/10 text-slate-100 rounded-r-3xl rounded-tl-3xl px-4 py-2"
+            "text-xs font-bold mb-1 uppercase tracking-wide",
+            isOwnMessage ? "text-white/80" : "text-gray-500"
           )}
         >
-          {content}
+          {displayName}
         </span>
-        <Activity mode={role === "assistant" ? "visible" : "hidden"}>
-          <CustomButton
-            onClick={() => handleCopy(content)}
-            className="cursor-pointer ml-2 hover:bg-white/10 rounded-xl flex justify-center items-center"
-          >
-            <Activity mode={isClicked ? "visible" : "hidden"}>
-              <img
-                src={icons.clipboardCheck.src}
-                alt={icons.clipboardCheck.alt}
-                className="opacity-75 w-3/4 h-3/4"
-              />
-            </Activity>
-            <Activity mode={isClicked ? "hidden" : "visible"}>
-              <img
-                src={icons.copy.src}
-                alt={icons.copy.alt}
-                className="opacity-75 w-3/4 h-3/4"
-              />
-            </Activity>
-          </CustomButton>
-        </Activity>
+
+        <p className="whitespace-pre-wrap">{content}</p>
+
+        {isAssistantMessage && (
+          <div className="mt-2 flex justify-start">
+            <Button
+              onClick={() => handleCopy(content)}
+              variant="ghost"
+              size="sm"
+              className="text-gray-500 hover:text-black hover:bg-gray-200 h-8"
+            >
+              {copied ? (
+                <>
+                  <ClipboardCheck size={16} className="mr-1" /> Copied!
+                </>
+              ) : (
+                <>
+                  <Clipboard size={16} className="mr-1" /> Copy
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

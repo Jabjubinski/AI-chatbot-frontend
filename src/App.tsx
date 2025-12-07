@@ -8,11 +8,14 @@ import ConversationStartPage from "./pages/ConversationStartPage";
 import { useDeleteModal } from "./hooks/useDeleteModal";
 import DeleteWarningModal from "./components/modals/DeleteWarningModal";
 import SearchConversationsPage from "./pages/SearchConversationsPage";
-import FeedPage from "./pages/FeedPage";
+import BlogPage from "./pages/BlogPage";
 import Chat from "./components/Chat/Chat";
+import { useSettingsModal } from "./hooks/useSettingsModal";
+import SettingsModal from "./components/modals/SettingsModal";
 
 function App() {
   const { isOpen } = useDeleteModal();
+  const { isOpened } = useSettingsModal();
 
   return (
     <>
@@ -24,7 +27,7 @@ function App() {
             </SafeRoute>
           }
         >
-          <Route path="/" element={<FeedPage />} />
+          <Route path="/" element={<BlogPage />} />
           <Route path="/cs" element={<ConversationStartPage />} />
           <Route path="/c/:id" element={<ConversationDetails />} />
           <Route path="/c/search" element={<SearchConversationsPage />} />
@@ -34,6 +37,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
       </Routes>
       <div className="">{isOpen && <DeleteWarningModal />}</div>
+      <div>{isOpened && <SettingsModal />}</div>
     </>
   );
 }

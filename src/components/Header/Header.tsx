@@ -3,8 +3,6 @@ import icons from "../UI/icons";
 import useTheme from "../../hooks/useLighMode";
 
 export default function Header() {
-  const { toggleTheme } = useTheme();
-
   return (
     <div className="w-full flex items-center p-4 border-b border-slate-800/60 shadow-lg shadow-black/30">
       <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
@@ -18,7 +16,7 @@ export default function Header() {
               alt={icons.eclipse.alt}
               className="w-7 h-7"
             />
-            GeoBot
+            Lithos
           </Link>
         </div>
 

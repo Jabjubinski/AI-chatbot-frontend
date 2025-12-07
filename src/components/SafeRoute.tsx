@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { Navigate } from "react-router-dom";
+import LoadingCircleSpinner from "./UI/LoadingCircle";
 
 function SafeRoute({ children }: { children: React.ReactNode }) {
     const { isAuth, user, profile, loading } = useAuthStore();
@@ -11,7 +12,7 @@ function SafeRoute({ children }: { children: React.ReactNode }) {
         }
     }, [user, loading, profile]);
 
-    if (loading) return <div>loading...</div>;
+    if (loading) return <div className="mx-auto flex w-full justify-center items-center h-screen"><LoadingCircleSpinner/></div>;
     if (!isAuth) return <Navigate to="/login" replace />;
 
     return <>{children}</>;
